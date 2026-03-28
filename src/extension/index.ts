@@ -1,11 +1,13 @@
-// Touhou World Cup 2025 https://touhouworldcup.com/
-// Copyright (c) 2025 Paul Schwandes / 32th System
-// All Rights Reserved.
+/*
+ * Touhou World Cup 2026 https://touhouworldcup.com/
+ * Copyright (c) 2026 Paul Schwandes / 32th System
+ * All Rights Reserved.
+ */
 
 import NodeCG from 'nodecg/types'
 import { setNodeCG } from './util/nodecg_set'
 
-export = (nodecg: NodeCG.ServerAPI) => {
+export default (nodecg: NodeCG.ServerAPI): void => {
   setNodeCG(nodecg)
   require('./load')
 }

@@ -1,0 +1,44 @@
+/*
+ * Touhou World Cup 2026 https://touhouworldcup.com/
+ * Copyright (c) 2026 Paul Schwandes / 32th System
+ * All Rights Reserved.
+ */
+
+@import url('../shared/common.css');
+
+@font-face {
+  font-family: 'Mohave';
+  src: url('fonts/mohave.regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Mohave Bold';
+  src: url('fonts/mohave.bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'KOT';
+  src: url('fonts/KOT.woff') format('woff');
+}
+
+body {
+  margin: 0 auto;
+  font-family: 'Mohave Bold';
+  overflow: hidden;
+  text-transform: uppercase;
+  color: white;
+  line-height: 1;
+}
+
+body > * {
+  position: fixed;
+}
+
+#game {
+  color: var(--gameColor);
+}
+
+img.color-multiply {
+  opacity: 0;
+  position: fixed;
+}

@@ -10,7 +10,6 @@ export interface TextControl {
 	top: string[];
 	bottom: string[];
 	results: string;
-	resultsFinal: string;
 	selectedPlayer: number;
 	[k: string]: unknown;
 }

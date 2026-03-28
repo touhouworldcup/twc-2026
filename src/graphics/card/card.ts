@@ -1,131 +1,121 @@
-// Touhou World Cup 2025 https://touhouworldcup.com/
-// Copyright (c) 2025 Paul Schwandes / 32th System
-// All Rights Reserved.
+/*
+ * Touhou World Cup 2026 https://touhouworldcup.com/
+ * Copyright (c) 2026 Paul Schwandes / 32th System
+ * All Rights Reserved.
+ */
 
 import { RunData } from 'nodecg-speedcontrol/src/types'
-import { querySelector, params, setText, onLoad, waitForReplicants } from 'src/shared/browser-common'
-import { getGameDataByRun } from 'src/shared/games'
-import { msToString } from '../common'
+import { querySelector, setText, onLoad, nodecg, params } from '../../shared/common'
+import { getGameDataByRun } from '../../shared/games'
+import { match as matchReplicant, msToString, setGameColor } from '../graphic'
+import { i18n } from '../i18n'
 
-const timezone = parseInt(params.get('timezone') ?? '9', 10)
-
-function renderColorBackground (color: string): void {
-  const scrollBuilder = querySelector<HTMLCanvasElement>('#scrollBuilder')
-  const scrollTile = querySelector<HTMLImageElement>('#scrollTile')
-  const scroll = querySelector<HTMLImageElement>('#scroll')
-
-  const ctx = scrollBuilder.getContext('2d')
-  if (ctx === null) return
-
-  for (let i = 0; i < 40; i++) {
-    ctx.drawImage(scrollTile, 0, i * 54)
-  }
-
-  ctx.globalCompositeOperation = 'multiply' // multiply it by red color
-  ctx.fillStyle = color
-  ctx.fillRect(0, 0, 506, 2160)
-  ctx.globalCompositeOperation = 'destination-atop' // restore transparency
-  ctx.drawImage(scrollBuilder, 0, 0)
-  scrollBuilder.toBlob((blob) => {
-    const url = URL.createObjectURL(blob as Blob)
-    scroll.src = url
-    scrollBuilder.remove()
-    scrollTile.remove()
-  })
-}
-
-let matchTime: number | undefined
-const runData = nodecg.Replicant<RunData>('runDataActiveRun', 'nodecg-speedcontrol')
-waitForReplicants(runData)
-onLoad(async () => {
-  const run = runData.value
-  if (run === undefined) return
-
-  const { game, category } = getGameDataByRun(run)
-
-  setText('#gameJP', game.japaneseName)
-  setText('#gameEN', game.englishName)
-  renderColorBackground(game.color)
-  setText('#category', category)
+const allMatches = nodecg.Replicant<RunData[]>('allMatches')
+onLoad(matchReplicant, allMatches, async () => {
+  const match = getMatch()
+  if (match === undefined) return
+  setGameColor(match)
+  const { game, category } = getGameDataByRun(match)
+  setText('#game', `${game.japaneseName} ~ ${game.englishName}`)
+  setText('#category', i18n.categoryName(category))
 
   for (let i = 0; i < 5; i++) {
-    const team = run.teams[i]
-    const plate = querySelector(`#player${i}`)
-    if (team === undefined) {
-      plate.style.display = 'none'
-      continue
-    }
-    plate.style.removeProperty('display')
-    const players = team.players
-    querySelector(`#player${i} > .team`).setAttribute('team', team.name ?? '')
-    setText(`#player${i} > .team`, team.name)
-    if (players.length === 1) {
-      const player = players[0]
-      setText(`#player${i} > .name > .nameEN`, player.name)
-      setText(`#player${i} > .name > .nameJP`, player.customData?.nameJP)
-    } else {
-      const text = players.map(p => p.name).join(', ')
-      setText(`#player${i} > .name > .nameEN`, text)
-      setText(`#player${i} > .name > .nameJP`, '')
-    }
+    setPlayer(match, i)
   }
 
-  setTimeout(scalePlayerContainer, 100)
+  let prev: HTMLElement | undefined
+  for (const plate of document.querySelectorAll<HTMLElement>('.player')) {
+    if (prev === undefined) {
+      prev = plate
+      continue
+    }
 
-  const startTime = run.customData.startTime
-  if (startTime === undefined) return
-  matchTime = Date.parse(startTime)
-  updateTimer()
+    const vs = document.createElement('span')
+    vs.classList = 'vs'
+    vs.innerText = 'vs'
+    const container = plate.parentElement as HTMLElement
+    container.insertBefore(vs, plate)
+
+    const nameWidth = querySelector('.name', prev).offsetWidth
+    const teamWidth = querySelector('.team', prev).offsetWidth
+    let marginLeft = 20 + nameWidth - teamWidth
+    if (marginLeft > 20) marginLeft = 20
+    if (marginLeft < 0) marginLeft = 0
+    vs.style.marginLeft = `${marginLeft}px`
+  }
+
+  await new Promise(resolve => setTimeout(resolve, 100))
+  scalePlayerContainer()
+  setMatchTime(match)
 })
+
+function getMatch (): RunData | undefined {
+  const match = matchReplicant.value
+  if (match === undefined) return
+  const matches = allMatches.value
+  if (matches === undefined) return match
+  const index = matches.findIndex(m => m.id === match.id)
+  if (index === undefined) return match
+  const upcomingIndex = index + parseInt(params.get('next') ?? '0')
+  const upcomingMatch = matches[upcomingIndex]
+  if (upcomingMatch === undefined) throw new Error(`no match with index ${upcomingIndex}`)
+  return upcomingMatch
+}
+
+function setPlayer (run: RunData, i: number): void {
+  const team = run.teams[i]
+  if (team === undefined) return
+  const players = team.players
+  if (players.length === 0) return
+
+  const plate = document.createElement('div')
+  plate.className = 'player'
+  plate.appendChild(querySelector<HTMLTemplateElement>('#player').content.cloneNode(true))
+  querySelector('#playersContainer').appendChild(plate)
+  const teamElem = querySelector('.team', plate)
+  const teamName = team.name ?? ''
+  teamElem.setAttribute('team', teamName)
+  setText(teamElem, i18n.teamName(teamName))
+
+  const nameElem = querySelector('.name', plate)
+  setText(nameElem, players.length === 1
+    ? i18n.playerName(players[0])
+    : players.map(player => i18n.playerName(player)).join(', ')
+  )
+}
 
 function scalePlayerContainer (): void {
   const elem = querySelector('#playersContainer')
-  const { width, height } = elem.getBoundingClientRect()
-  const scale = Math.min(1270 / width, 550 / height)
+  const { width } = elem.getBoundingClientRect()
+  const scale = Math.min(1, 1580 / width)
   elem.style.transform = `scale(${scale})`
 }
 
-function updateTimer (): void {
-  if (matchTime === undefined) return
-  console.log(matchTime)
+function setMatchTime (match: RunData): void {
+  const dateString = match.customData.startTime
+  if (dateString === undefined) return
+  const matchTime = Date.parse(dateString)
   let remaining = (matchTime - Date.now())
   if (remaining < 0) {
     remaining = 0
   }
 
   if (remaining > 6000000) {
-    const date = new Date(matchTime + 3600000 * timezone)
-
-    const month = {
-      3: 'Apr',
-      4: 'May',
-      5: 'June',
-      6: 'July',
-      7: 'Aug'
-    }[date.getUTCMonth().toString()] ?? ''
-
-    const day = pad(date.getUTCDate())
-    const hour = pad(date.getUTCHours())
-    const minute = pad(date.getUTCMinutes())
-    setText('#timeTop', `${month} ${day}`)
-    setTime(`${hour}:${minute}`)
-    setText('#timeBottom', `GMT${timezone >= 0 ? '+' : ''}${timezone}`)
-    setTimeout(updateTimer, 10000)
+    const { day, time, timezone } = i18n.localTime(new Date(matchTime))
+    querySelector('#time-nextmatch').style.display = ''
+    setText('#day', day)
+    setTimer(time)
+    setText('#timezone', timezone)
   } else {
-    setText('#timeTop', '')
-    setTime(msToString(remaining))
-    setText('#timeBottom', '')
+    querySelector('#time-nextmatch').style.display = 'none'
+    setTimer(msToString(remaining))
     const delay = remaining + 50 - Math.floor(remaining / 1000) * 1000
-    setTimeout(updateTimer, delay)
+    setTimeout(() => setMatchTime(match), delay)
   }
 }
 
-function setTime (text: string): void {
+function setTimer (text: string): void {
   text.split('').forEach((digit, index) => {
     setText(`#timer${index}`, digit)
   })
-}
-
-function pad (num: number): string {
-  return `${num}`.padStart(2, '0')
 }

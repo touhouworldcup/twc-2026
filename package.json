@@ -1,7 +1,7 @@
 {
-  "name": "twc-2025",
+  "name": "twc-2026",
   "version": "0.0.0",
-  "description": "TWC 2025 NodeCG bundle",
+  "description": "TWC 2026 NodeCG bundle",
   "homepage": "",
   "license": "CUSTOM",
   "copyright.owner": "Paul Schwandes / 32th System",
@@ -25,20 +25,20 @@
   "targets": {
     "graphics": {
       "source": "src/graphics/**/*.html",
-      "publicUrl": "/bundles/twc-2025/graphics",
+      "publicUrl": "/bundles/twc-2026/graphics",
       "distDir": "graphics",
       "context": "browser",
       "engines": {
-        "browsers": "Chrome 103"
+        "browsers": "Chrome 127"
       }
     },
     "dashboard": {
       "source": "src/dashboard/**/*.html",
-      "publicUrl": "/bundles/twc-2025/dashboard",
+      "publicUrl": "/bundles/twc-2026/dashboard",
       "distDir": "dashboard",
       "context": "browser",
       "engines": {
-        "browsers": "Chrome 103"
+        "browsers": "Chrome 127"
       }
     },
     "extension": {
@@ -53,16 +53,19 @@
       }
     }
   },
-  "@parcel/bundler-default": {
-    "minBundles": 10000,
-    "minBundleSize": 3000,
-    "maxParallelRequests": 20
-  },
   "scripts": {
     "autofix": "npx ts-standard src/graphics/**/*.ts src/dashboard/**/*.ts src/shared/**/*.ts --fix && npx ts-standard src/extension/**/*.ts --project \"src/extension/tsconfig.json\" --fix",
-    "clean": "trash .parcel-cache graphics dashboard extension shared",
-    "build": "parcel build",
-    "deploy": "npx copyfiles \"dashboard/**/*\" \"graphics/**/*\" \"extension/**/*\" \"\\\\touhouworldcup.com\\george\\twc-2025-nodecg\\bundles\\twc-2025"
+    "clean": "trash graphics dashboard extension shared .parcel-cache",
+    "build:graphics": "parcel build --no-content-hash --target graphics",
+    "build:dashboard": "parcel build --no-content-hash --target dashboard",
+    "build:extension": "parcel build --no-content-hash --target extension",
+    "build": "npm run clean && npm-run-all --parallel build:*",
+    "commit": "git add . && git commit -m \"auto commit\" && git push -u origin2 main",
+    "deploy:graphics": "npm run build:graphics && npm exec cpx2 \"graphics/**/*\" \"//touhouworldcup.com/twc/nodecgs/bundles/twc-2026/graphics\" --clean --update",
+    "deploy:dashboard": "npm run build:dashboard && npm exec cpx2 \"dashboard/**/*\" \"//touhouworldcup.com/twc/nodecgs/bundles/twc-2026/dashboard\" --clean --update",
+    "deploy:extension": "npm run build:extension && npm exec cpx2 \"extension/**/*\" \"//touhouworldcup.com/twc/nodecgs/bundles/twc-2026/extension\" --clean --update",
+    "deploy:other": "npm exec cpx2 \"package.json\" \"//touhouworldcup.com/twc/nodecgs/bundles/twc-2026\" --update && npm exec cpx2 \"schemas/**/*\" \"//touhouworldcup.com/twc/nodecgs/bundles/twc-2026/schemas\" --update",
+    "deploy": "npm run clean && npm-run-all --parallel deploy:*"
   },
   "nodecg": {
     "compatibleRange": "^2.0.0",
@@ -74,36 +77,42 @@
         "file": "text-control.html"
       },
       {
-        "name": "admin-buttons",
-        "title": "Admin Buttons",
+        "name": "admin",
+        "title": "Admin",
         "width": 3,
-        "file": "admin-buttons.html"
+        "file": "admin.html"
       }
     ],
     "graphics": [
       {
         "file": "game.html",
         "width": 1920,
-        "height": 1080,
-        "singleInstance": false
+        "height": 1080
       },
       {
         "file": "card.html",
         "width": 1920,
-        "height": 1080,
-        "singleInstance": false
+        "height": 1080
       },
       {
         "file": "results.html",
         "width": 1920,
-        "height": 1080,
-        "singleInstance": false
+        "height": 1080
       },
       {
         "file": "obs-controller.html",
         "width": 1920,
-        "height": 1080,
-        "singleInstance": false
+        "height": 1080
+      },
+      {
+        "file": "image.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "file": "regional-overlay.html",
+        "width": 1920,
+        "height": 1080
       }
     ],
     "assetCategories": [
@@ -120,20 +129,25 @@
     ]
   },
   "devDependencies": {
-    "@parcel/optimizer-data-url": "^2.15.4",
-    "@parcel/transformer-inline-string": "^2.15.4",
+    "@parcel/optimizer-data-url": "^2.16.4",
+    "@parcel/transformer-inline-string": "^2.16.4",
     "@types/textfit": "^2.4.5",
     "copyfiles": "^2.4.1",
-    "nodecg": "^2.6.1",
+    "cpx2": "^8.0.0",
+    "express": "^5.2.1",
+    "nodecg": "^2.6.4",
     "nodecg-speedcontrol": "github:speedcontrol/nodecg-speedcontrol",
     "npm-run-all": "^4.1.5",
-    "parcel": "^2.15.4",
-    "trash-cli": "^6.0.0",
+    "parcel": "^2.16.4",
+    "trash-cli": "^7.2.0",
     "ts-standard": "^12.0.2"
   },
   "dependencies": {
-    "nocodb-sdk": "^0.263.8",
-    "obs-websocket-js": "^5.0.6",
+    "debounce": "^3.0.0",
+    "eventsource": "^4.1.0",
+    "fast-json-patch": "^3.1.1",
+    "nocodb-sdk": "^0.301.3",
+    "obs-websocket-js": "^5.0.7",
     "speedcontrol-util": "^0.6.1",
     "textfit": "^2.4.0"
   }

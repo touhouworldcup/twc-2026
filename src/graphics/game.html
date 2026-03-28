@@ -1,24 +1,32 @@
-<!-- Touhou World Cup 2025 https://touhouworldcup.com/ -->
-<!-- Copyright (c) 2025 Paul Schwandes / 32th System -->
+<!-- Touhou World Cup 2026 https://touhouworldcup.com/ -->
+<!-- Copyright (c) 2026 Paul Schwandes / 32th System -->
 <!-- All Rights Reserved. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./game/game.css">
-    <link rel="stylesheet" class="layoutCss" href="./game/P1.css">
-    <link rel="stylesheet" class="layoutCss" href="./game/P2.css">
-    <link rel="stylesheet" class="layoutCss" href="./game/P3.css">
-    <link rel="stylesheet" id="pofvCss" href="./game/pofv.css">
-    <title>Game</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game</title>
+  <link rel="stylesheet" href="game/game.css">
 </head>
 <body>
-  <img id="audio" src="./game/audio.png">
+  <img id="audio" src="game/audio.png">
+
+  <template id="P1">
+    <link rel="stylesheet" href="game/P1.css">
+    <img src="./game/P1.png">
+  </template>
+  <template id="P2">
+    <link rel="stylesheet" href="game/P2.css">
+    <img src="./game/P2.png">
+  </template>
+  <template id="P3">
+    <link rel="stylesheet" href="game/P3.css">
+    <img src="./game/P3.png">
+  </template>
 
   <span id="matchInfo">
-    <div id="gameJP"></div>
-    <div id="gameEN"></div>
+    <div id="game"></div>
     <div id="category"></div>
   </span>
   
@@ -34,43 +42,20 @@
     </span>
     <span id="finalRun">FINAL RUN!</span>
     <span style="flex: 1" id="resetTimeText">
-      RESET<br>TIME
     </span>
   </span>
 
-  <span class="plate" id="plate0">
-    <span class="plateTop"></span>
-    <span class="plateMiddle"></span>
-    <span class="plateBottom"></span>
-  </span>
-
-  <span class="plate" id="plate1">
-    <span class="plateTop"></span>
-    <span class="plateMiddle"></span>
-    <span class="plateBottom"></span>
-  </span>
-
-  <span class="plate" id="plate2">
-    <span class="plateTop"></span>
-    <span class="plateMiddle"></span>
-    <span class="plateBottom"></span>
-  </span>
-
-  <span class="plate" id="plate3">
-    <span class="plateTop"></span>
-    <span class="plateMiddle"></span>
-    <span class="plateBottom"></span>
-  </span>
-
-  <span class="plate" id="plate4">
-    <span class="plateTop"></span>
-    <span class="plateMiddle"></span>
-    <span class="plateBottom"></span>
-  </span>
+  <template id="plate">
+    <div class="plate">
+      <span class="plateTop"></span>
+      <span class="plateMiddle"></span>
+      <span class="plateBottom"></span>
+    </div>
+  </template>
   
   <span id="results">
     <span id="resultsInner"></span>
   </span>
-  <script type="module" src="./game/game.ts"></script>
+  <script type="module" src="game/game.ts"></script>
 </body>
 </html>

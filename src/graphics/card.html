@@ -1,79 +1,49 @@
-<!-- Touhou World Cup 2025 https://touhouworldcup.com/ -->
-<!-- Copyright (c) 2025 Paul Schwandes / 32th System -->
+<!-- Touhou World Cup 2026 https://touhouworldcup.com/ -->
+<!-- Copyright (c) 2026 Paul Schwandes / 32th System -->
 <!-- All Rights Reserved. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="card/card.css">
-    <title>Match Card</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match Card</title>
+  <link rel="stylesheet" href="card/card.css">
 </head>
 <body>
-  <img id="logo" src="./card/logo.png">
+  <img class="fullscreen" src="card/gradient-layer.png">
+  <img class="fullscreen color-multiply image-shadow" src="card/color-layer.png">
+  <img class="fullscreen color-multiply" src="card/color-layer-2.png">
+  <img class="fullscreen image-shadow" src="card/static-layer.png">
+  <img class="fullscreen" src="card/static-layer-2.png">
   
-  <div id="scrollContainer">
-    <canvas id="scrollBuilder" width="506" height="2160"></canvas>
-    <img id="scrollTile" src="./card/scroll-tile.png">
-    <img id="scroll">
+  <div id="matchInfo">
+    <div id="game"></div>
+    <div id="category"></div>
   </div>
 
-  <div id="time">
-    <div id="timeTop"></div>
-    <div id="timeMiddle">
+  <template id="player">
+    <div class="name"></div>
+    <div class="team"></div>
+  </template>
+  <div id="outerPlayersContainer">
+    <div id="playersContainer">
+    </div>
+  </div>
+
+  <div id="timeContainer">
+    <div id="time">
       <span id="timer0" class="digit"></span>
       <span id="timer1" class="digit"></span>
       <span id="timer2" class="colon"></span>
       <span id="timer3" class="digit"></span>
       <span id="timer4" class="digit"></span>
     </div>
-    <div id="timeBottom"></div>
-  </div>
-  
-  <div id="outerPlayersContainer">
-    <div id="playersContainer">
-      <div id="player0">
-        <div class="team"></div>
-        <div class="name">
-          <span class="nameEN"></span>
-          <span class="nameJP"></span>
-        </div>
-      </div>
-      <div id="player1">
-        <div class="team"></div>
-        <div class="name">
-          <span class="nameEN"></span>
-          <span class="nameJP"></span>
-        </div>
-      </div>
-      <div id="player2">
-        <div class="team"></div>
-        <div class="name">
-          <span class="nameEN"></span>
-          <span class="nameJP"></span>
-        </div>
-      </div>
-      <div id="player3">
-        <div class="team"></div>
-        <div class="name">
-          <span class="nameEN"></span>
-          <span class="nameJP"></span>
-        </div>
-      </div>
-      <div id="player4">
-        <div class="team"></div>
-        <div class="name">
-          <span class="nameEN"></span>
-          <span class="nameJP"></span>
-        </div>
-      </div>
+    <div id="time-nextmatch">
+      <div id="day"></div>
+      <div id="timezone"></div>
     </div>
   </div>
-  <div id="matchInfo">
-    <div id="gameJP"></div>
-    <div id="gameEN"></div>
-    <div id="category"></div>
-  </div>
-  <script type="module" src="./card/card.ts"></script>
+
+  <script type="module" src="card/card.ts"></script>
 </body>
 </html>

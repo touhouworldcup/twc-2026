@@ -1,9 +1,16 @@
-// Touhou World Cup 2025 https://touhouworldcup.com/
-// Copyright (c) 2025 Paul Schwandes / 32th System
-// All Rights Reserved.
+/*
+ * Touhou World Cup 2026 https://touhouworldcup.com/
+ * Copyright (c) 2026 Paul Schwandes / 32th System
+ * All Rights Reserved.
+ */
 
-import { setupUpdateRunsListener } from './db/db'
+import { setupAdminActions } from './admin-actions'
+import { setDefaultReplicants } from './default-replicants'
 import { setupRemoteLoggerListener } from './logger'
+import { setupInstanceSync } from './sync/instance-sync'
+import { nodecg } from './util/nodecg'
 
-setupUpdateRunsListener()
 setupRemoteLoggerListener()
+setupInstanceSync()
+setupAdminActions()
+nodecg.listenFor('reset-replicants', setDefaultReplicants)

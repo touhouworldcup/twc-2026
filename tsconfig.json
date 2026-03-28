@@ -19,12 +19,6 @@
     "useUnknownInCatchVariables": false,                 /* Type catch clause variables as 'unknown' instead of 'any'. */
     "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
   },
-  "include": [
-    "src/browser/**/*.ts",  
-    "src/shared/**/*.ts",
-    "src/dashboard/**/*.ts",
-    "src/graphics/**/*.ts",
-    "node_modules/nodecg/types/augment-window.d.ts"
-  ],
-  "types": ["node", "express", "node_modules/nodecg/types/augment-window.d.ts"]
+  "include": ["src/**/*.ts"],
+  "types": ["node", "express"]
 }

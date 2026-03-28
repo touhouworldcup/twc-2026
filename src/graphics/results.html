@@ -1,25 +1,32 @@
-<!-- Touhou World Cup 2025 https://touhouworldcup.com/ -->
-<!-- Copyright (c) 2025 Paul Schwandes / 32th System -->
+<!-- Touhou World Cup 2026 https://touhouworldcup.com/ -->
+<!-- Copyright (c) 2026 Paul Schwandes / 32th System -->
 <!-- All Rights Reserved. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Results</title>
-    <link rel="stylesheet" href="./results/results.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Final Results</title>
+  <link rel="stylesheet" href="results/results-base.css">
 </head>
 <body>
+  <template id="art">
+    <link rel="stylesheet" href="results/results-art.css">
+    <img src="results/results-art.png">
+  </template>
+  <template id="no-art">
+    <link rel="stylesheet" href="results/results-no-art.css">
+    <img src="results/results-no-art.png">
+  </template>
   <img id="artwork"></img>
   <span id="credit"></span>
 
   <span id="matchInfo">
-    <div id="gameJP"></div>
-    <div id="gameEN"></div>
+    <div id="game"></div>
     <div id="category"></div>
   </span>
   
   <span id="results"></span>
-  <script type="module" src="./results/results.ts"></script>
+  <script type="module" src="results/results.ts"></script>
 </body>
 </html>

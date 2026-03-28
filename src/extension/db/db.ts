@@ -1,34 +1,34 @@
-// Touhou World Cup 2025 https://touhouworldcup.com/
-// Copyright (c) 2025 Paul Schwandes / 32th System
-// All Rights Reserved.
+/*
+ * Touhou World Cup 2026 https://touhouworldcup.com/
+ * Copyright (c) 2026 Paul Schwandes / 32th System
+ * All Rights Reserved.
+ */
 
 import { Api } from 'nocodb-sdk'
-import { nodecg } from '../util/nodecg'
+import { bundleConfig, nodecg } from '../util/nodecg'
 import { RunData, RunDataPlayer, RunDataTeam } from 'speedcontrol-util/types/speedcontrol'
 import { games } from '../../shared/games'
-import { DatabaseConfiguration, Player, Match } from './db-types'
+import { Player, Match } from './db-types'
+import { Configuration } from 'src/shared/config'
 
-const config = nodecg.bundleConfig.nocodb as DatabaseConfiguration
-const api = new Api({
-  baseURL: 'https://app.nocodb.com',
-  headers: {
-    'xc-token': config.token
+export async function updateRunsFromDatabase (): Promise<void> {
+  const config = bundleConfig.nocodb
+  if (config === undefined) {
+    nodecg.log.error('Database update requested without DB config')
+    return
   }
-})
 
-export function setupUpdateRunsListener (): void {
-  nodecg.listenFor('update-runs', 'twc-2025', (_, ack) => {
-    if (ack === undefined || ack.handled) return
-    updateRunsFromDatabase().then(() => ack(null, true)).catch(() => ack(null, false))
+  const api = new Api({
+    baseURL: 'https://nocodb.touhouworldcup.com',
+    headers: {
+      'xc-token': config.token
+    }
   })
-}
-
-async function updateRunsFromDatabase (): Promise<void> {
   nodecg.log.info('Updating runs from database')
-  const schedule = await getTable<Match>(...config.scheduleView)
-  const players = await getTable<Player>(...config.playersView)
+  const schedule = await getTable<Match>(api, config.scheduleView)
+  const players = await getTable<Player>(api, config.playersView)
 
-  const runDatas = schedule.flatMap((match) => createRunData(match, players))
+  const runDatas = schedule.flatMap((match) => createRunData(match, players, config))
   let prevID: string | undefined = ''
   for (const runData of runDatas) {
     nodecg.sendMessageToBundle('modifyRun', 'nodecg-speedcontrol', { runData, prevID })
@@ -37,14 +37,15 @@ async function updateRunsFromDatabase (): Promise<void> {
   }
 }
 
-function createRunData (match: Match, players: Player[]): RunData[] {
+function createRunData (match: Match, players: Player[], config: NonNullable<Configuration['nocodb']>): RunData[] {
   if (match.Category === '???') return []
-
+  if (match.Category === null) return []
   const [numberName, ...categoryArray] = match.Category.split(' ')
   const category = categoryArray.join(' ')
   const shortName = games.find(g => g.numberName === numberName)?.shortName
   if (shortName === undefined) {
     nodecg.log.error('Did not find game', numberName)
+    return []
   }
 
   return [{
@@ -55,7 +56,7 @@ function createRunData (match: Match, players: Player[]): RunData[] {
     teams: [match.Player_1, match.Player_2, match.Player_3].flatMap((player, index) => {
       return createTeam(player, index, players)
     }),
-    customData: getMatchCustomData(match)
+    customData: getMatchCustomData(match, config)
   }]
 }
 
@@ -66,7 +67,7 @@ function getEstimate (minutes: number): string {
 }
 
 const dateUTCKey = 'Date__UTC_'
-function getMatchCustomData (match: Match): {
+function getMatchCustomData (match: Match, config: NonNullable<Configuration['nocodb']>): {
   [key: string]: string
 } {
   const existingCustomData = nodecg.readReplicant<RunData[]>('runDataArray', 'nodecg-speedcontrol')
@@ -91,13 +92,19 @@ function createTeam (player: string, index: number, players: Player[]): RunDataT
 
   return [{
     id: 'team_' + id(dbPlayer.Name),
-    name: ['Team Aya', 'Team Hatate', 'Team Momiji'][index],
+    // name: ['Team Aya', 'Team Hatate', 'Team Momiji'][index]
     players: [createPlayer(dbPlayer)]
   }]
 }
 
 function createPlayer (player: Player): RunDataPlayer {
-  const nameJP = player.JapaneseName ?? player.ChineseName
+  const customData: Record<string, string> = {}
+  const nameJP = player.JapaneseName
+  if (nameJP !== null) customData.nameJP = nameJP
+
+  const nameCN = player.ChineseName
+  if (nameCN !== null) customData.nameCN = nameCN
+
   return {
     name: player.Name,
     id: id(player.Name),
@@ -105,7 +112,7 @@ function createPlayer (player: Player): RunDataPlayer {
     social: {
       twitch: player.DisplayStream === 1 ? player.Stream ?? undefined : undefined
     },
-    customData: nameJP === null ? {} : { nameJP }
+    customData
   }
 }
 
@@ -113,19 +120,19 @@ function id (input: string): string {
   return input.toLowerCase().replaceAll(/[^a-z0-9]/g, '')
 }
 
-export async function getTable<T> (orgs: string, baseName: string, tableName: string, viewName: string): Promise<T[]> {
+async function getTable<T> (api: Api<unknown>, ids: [string, string, string, string]): Promise<T[]> {
   const result: object[] = []
   const params: {
     offset?: number
   } = {}
   while (true) {
     try {
-      const { list, pageInfo } = await api.dbViewRow.list(orgs, baseName, tableName, viewName, params)
+      const { list, pageInfo } = await api.dbViewRow.list(...ids, params)
       result.push(...list)
       if (pageInfo.isLastPage === true) return result as T[]
       params.offset = (params.offset ?? 0) + list.length
     } catch (error) {
-      console.log(error)
+      nodecg.log.error(error)
       return result as T[]
     }
   }

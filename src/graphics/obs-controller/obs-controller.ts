@@ -1,72 +1,42 @@
-// Touhou World Cup 2025 https://touhouworldcup.com/
-// Copyright (c) 2025 Paul Schwandes / 32th System
-// All Rights Reserved.
+/*
+ * Touhou World Cup 2026 https://touhouworldcup.com/
+ * Copyright (c) 2026 Paul Schwandes / 32th System
+ * All Rights Reserved.
+ */
 
-import { OBSWebSocket, OBSWebSocketError } from 'obs-websocket-js'
-import { params, patchLogger, querySelector } from 'src/shared/browser-common'
-import { initWorldFeedController } from './implementation-WF'
-import { initEnglishController } from './implementation-EN'
-import { LastSceneSwitchTime } from 'src/types/schemas/last-scene-switch-time'
+import { OBSWebSocket } from 'obs-websocket-js'
+import { initWorldFeedController } from './world/world-controller'
+import { initEnglishController } from './regional/regional-controller'
+import { registerCustomOBSEvents } from './custom-obs-events'
+import { setupControllerLogging } from './logger'
+import { bundleConfig, region } from '../../shared/common'
 
-const password = nodecg.bundleConfig['obs-websocket-password'] as string
-const lastSceneSwitchTime = nodecg.Replicant<LastSceneSwitchTime>('last-scene-switch-time', 'twc-2025')
-
-const nodecgKey = params.get('key') ?? ''
 export const obs = new OBSWebSocket()
-obs.on('CurrentPreviewSceneChanged', () => {
-  lastSceneSwitchTime.value = Date.now()
+const config = bundleConfig.obs
+
+export async function connectOBS (): Promise<void> {
+  const connected = await new Promise<boolean>((resolve) => {
+    obs.once('Identified', () => onIdentify(() => resolve(true)))
+    obs.connect(`ws://127.0.0.1:${config.port}`, config.password).catch(() => {
+      resolve(false) // still resolve so the listeners are setup for later connection
+    })
+  })
+  if (connected) console.log('Connected to OBS Websocket')
+}
+
+function onIdentify (resolve: () => void): void {
+  obs.once('CurrentProgramSceneChanged', resolve)
+  obs.call('GetCurrentProgramScene').then(resolve).catch(() => {
+    console.log('obs-websocket connected, but video not ready yet. Waiting for CurrentProgramSceneChanged...')
+  })
+}
+
+obs.on('ConnectionClosed', () => {
+  void onConnectionClosed()
 })
 
-patchLogger(logToHTML)
-function logToHTML (level: string, ...data: any[]): void {
-  const argsString = data.map((object) => {
-    if (object instanceof Error) {
-      return [object.name, object.message, object.cause, object.stack].join(' ')
-    }
-    const type = typeof object
-    if (type === 'bigint') return (object as bigint).toString()
-    if (type === 'symbol') return (object as symbol).toString()
-    if (type === 'object') return JSON.stringify(object)
-    if (type === 'function') return (object as Function).toString()
-    return object
-  }).join(' ').replaceAll(nodecgKey, 'NODECG_KEY_REDACTED')
-
-  const element = document.createElement('span')
-  element.innerHTML = `${new Date().toISOString()} [${level}] ${argsString}`
-  const log = querySelector('#log')
-  log.appendChild(element)
-  if (log.childElementCount > 40) {
-    log.firstChild?.remove()
-  }
-}
-
-// patch obs emitter and log all OBS events
-// would like to not use "any" here, but the type signature is balls long
-const originalOBSEmit = obs.emit as any;
-(obs as any).emit = (...data: any[]): void => {
-  logToHTML('info', 'OBS Event', ...data)
-  originalOBSEmit.apply(obs, data)
-}
-
-let port = 0
-export async function connectOBS (_port?: number): Promise<void> {
-  if (_port !== undefined) {
-    port = _port
-  }
-
-  try {
-    await obs.connect(`ws://127.0.0.1:${port}`, password)
-  } catch (error) {
-    console.error('Failed to connect to OBS', error)
-  }
-}
-
-obs.on('ConnectionClosed', (error) => {
-  void onConnectionClosed(error)
-})
-
-async function onConnectionClosed (error: OBSWebSocketError): Promise<void> {
-  console.error('OBS connection closed', error)
+async function onConnectionClosed (): Promise<void> {
+  // console.error('OBS connection closed', error)
   await new Promise(resolve => setTimeout(resolve, 1000))
   void connectOBS()
 }
@@ -81,11 +51,23 @@ interface FadeAudioArgs {
 }
 
 export async function fadeAudio (args: FadeAudioArgs): Promise<void> {
+  if (!obs.identified) return
   const inputName = args.inputName
-  if (inputName === undefined) {
-    throw new Error('no input')
+  if (currentlyFading.has(inputName)) {
+    console.error('Already fading', inputName)
+    return
   }
 
+  currentlyFading.add(inputName)
+  try {
+    await fadeAudio0(args)
+  } finally {
+    currentlyFading.delete(inputName)
+  }
+}
+
+async function fadeAudio0 (args: FadeAudioArgs): Promise<void> {
+  const inputName = args.inputName
   let startDb = args.startDb
   if (startDb === undefined) {
     const { inputVolumeDb } = await obs.call('GetInputVolume', { inputName })
@@ -103,16 +85,6 @@ export async function fadeAudio (args: FadeAudioArgs): Promise<void> {
   if (duration === undefined) {
     duration = 1000
   }
-
-  if (currentlyFading.has(inputName)) {
-    console.error('Already fading', inputName)
-    return
-  }
-
-  currentlyFading.add(inputName)
-  setTimeout(() => {
-    currentlyFading.delete(inputName)
-  }, duration)
 
   const startGain = (startDb <= -100) ? 0 : Math.pow(10, startDb / 20)
   const endGain = (endDb <= -100) ? 0 : Math.pow(10, endDb / 20)
@@ -141,10 +113,14 @@ export async function fadeAudio (args: FadeAudioArgs): Promise<void> {
   }
 }
 
-// implementation
-const implementation = params.get('implementation')
-if (implementation === 'WF') {
-  void initWorldFeedController()
-} else if (implementation === 'EN') {
-  void initEnglishController()
+void initController().catch(console.error)
+async function initController (): Promise<void> {
+  setupControllerLogging()
+  await connectOBS()
+  await registerCustomOBSEvents()
+  if (region === 'world') {
+    await initWorldFeedController()
+  } else {
+    await initEnglishController()
+  }
 }

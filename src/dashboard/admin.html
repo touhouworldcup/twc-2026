@@ -1,0 +1,29 @@
+<!-- Touhou World Cup 2026 https://touhouworldcup.com/ -->
+<!-- Copyright (c) 2026 Paul Schwandes / 32th System -->
+<!-- All Rights Reserved. -->
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="admin/admin.css">
+</head>
+<body>
+  <div id="buttons"></div>
+  <div>
+    <label>Select world feed server source</label>
+    <select id="select-server"></select>
+  </div>
+  <label id="is-connected"></label>
+  <div>
+    <div>
+      Old log ID
+      <input id="oldLogId" type="text">
+    </div>
+    <div>
+      New log ID
+      <input id="newLogId" type="text">
+    </div>
+    <button id="updateLogId">Update log id</button>
+  </div>
+  <script type="module" src="admin/admin.ts"></script>
+</body>
+</html>

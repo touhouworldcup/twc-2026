@@ -1,67 +1,66 @@
 /*
- * Touhou World Cup 2025 https://touhouworldcup.com/
- * Copyright (c) 2025 Paul Schwandes / 32th System
+ * Touhou World Cup 2026 https://touhouworldcup.com/
+ * Copyright (c) 2026 Paul Schwandes / 32th System
  * All Rights Reserved.
  */
 
 #matchInfo {
-  left: 719px;
-  top: 99px;
-  width: 482px;
-  height: 91px;
+  left: 720px;
+  top: 108px;
+  width: 480px;
+  height: 100px;
 }
 
 #timerContainer {
-  left: 719px;
-  top: 194px;
-  width: 482px;
-  height: 91px;
+  left: 720px;
+  top: 212px;
+  width: 480px;
+  height: 100px;
 }
 
 #plate0 {
-  left: 719px;
-  top: 357px;
-  width: 428px;
-  height: 82px;
+  left: 4px;
+  top: 542px;
+  width: 432px;
+  height: 120px;
 }
 
 #plate1 {
-  left: 773px;
-  top: 482px;
-  width: 428px;
-  height: 82px;
-  text-align: end;
+  left: 744px;
+  top: 418px;
+  width: 432px;
+  height: 120px;
+  text-align: center;
 }
 
 #plate2 {
-  left: 719px;
-  top: 607px;
-  width: 428px;
-  height: 82px;
-}
-
-#plate3, #plate4 {
-  display: none;
+  left: 1484px;
+  top: 542px;
+  width: 432px;
+  height: 120px;
+  text-align: end;
 }
 
 #results {
-  left: 755px;
-  top: 787px;
-  width: 411px;
-  height: 199px;
+  left: 44px;
+  top: 710px;
+  width: 512px;
+  height: 326px;
 }
 
 .audio-0 {
-  right: 1205px;
-  bottom: 542px;
+  left: 440px;
+  top: 542px;
 }
 
 .audio-1 {
-  right: 4px;
-  bottom: 542px;
+  left: 960px;
+  bottom: 626px;
+  transform: translateX(-50%) rotate(-90deg);
 }
 
 .audio-2 {
-  right: 1205px;
-  bottom: 4px;
+  right: 440px;
+  top: 542px;
+  transform: scaleX(-1);
 }

@@ -7,3 +7,4 @@ bower_components
 /extension
 /shared
 *.tsbuildinfo
+/src/graphics/fonts/KOT.woff

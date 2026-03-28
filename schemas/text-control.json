@@ -6,28 +6,29 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "default": []
     },
     "bottom": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "default": []
     },
     "results": {
-      "type": "string"
-    },
-    "resultsFinal": {
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     "selectedPlayer": {
-      "type": "number"
+      "type": "number",
+      "default": 1
     }
   },
   "required": [
     "top",
     "bottom",
     "results",
-    "resultsFinal"
+    "selectedPlayer"
   ]
 }

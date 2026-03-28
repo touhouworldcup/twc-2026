@@ -1,15 +1,8 @@
-// Touhou World Cup 2025 https://touhouworldcup.com/
-// Copyright (c) 2025 Paul Schwandes / 32th System
-// All Rights Reserved.
-
-type NocoView = [string, string, string, string]
-
-export interface DatabaseConfiguration {
-  token: string
-  hourOffset: number
-  scheduleView: NocoView
-  playersView: NocoView
-}
+/*
+ * Touhou World Cup 2026 https://touhouworldcup.com/
+ * Copyright (c) 2026 Paul Schwandes / 32th System
+ * All Rights Reserved.
+ */
 
 export interface Match {
   Date__UTC_: string | null

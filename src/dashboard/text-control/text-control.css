@@ -1,9 +1,18 @@
+/*
+ * Touhou World Cup 2026 https://touhouworldcup.com/
+ * Copyright (c) 2026 Paul Schwandes / 32th System
+ * All Rights Reserved.
+ */
+
+@import url('../dashboard.css');
+
 #plateTexts {
   display: grid;
   grid-template-columns: min-content 1fr 1fr;
   white-space: nowrap;
   text-align: left;
 }
+
 #plateTexts > * {
   margin-left: 5px;
 }

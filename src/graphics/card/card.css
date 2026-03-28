@@ -1,175 +1,148 @@
 /*
- * Touhou World Cup 2025 https://touhouworldcup.com/
- * Copyright (c) 2025 Paul Schwandes / 32th System
+ * Touhou World Cup 2026 https://touhouworldcup.com/
+ * Copyright (c) 2026 Paul Schwandes / 32th System
  * All Rights Reserved.
  */
 
-@import "../common.css";
+@import url('../graphic.css');
 
 body {
-  color: white;
+  --baseFontSize: 60px;
+  --baseHeight: calc(var(--baseFontSize) * 114 / 120);
+  text-shadow: rgb(0, 0, 0) 5px 0px 0px, rgb(0, 0, 0) 4.90033px 0.993347px 0px, rgb(0, 0, 0) 4.60531px 1.94709px 0px, rgb(0, 0, 0) 4.12668px 2.82321px 0px, rgb(0, 0, 0) 3.48353px 3.58678px 0px, rgb(0, 0, 0) 2.70151px 4.20736px 0px, rgb(0, 0, 0) 1.81179px 4.6602px 0px, rgb(0, 0, 0) 0.849836px 4.92725px 0px, rgb(0, 0, 0) -0.145998px 4.99787px 0px, rgb(0, 0, 0) -1.13601px 4.86924px 0px, rgb(0, 0, 0) -2.08073px 4.54649px 0px, rgb(0, 0, 0) -2.94251px 4.04248px 0px, rgb(0, 0, 0) -3.68697px 3.37732px 0px, rgb(0, 0, 0) -4.28444px 2.57751px 0px, rgb(0, 0, 0) -4.71111px 1.67494px 0px, rgb(0, 0, 0) -4.94996px 0.7056px 0px, rgb(0, 0, 0) -4.99147px -0.291871px 0px, rgb(0, 0, 0) -4.83399px -1.27771px 0px, rgb(0, 0, 0) -4.48379px -2.2126px 0px, rgb(0, 0, 0) -3.95484px -3.05929px 0px, rgb(0, 0, 0) -3.26822px -3.78401px 0px, rgb(0, 0, 0) -2.4513px -4.35788px 0px, rgb(0, 0, 0) -1.53666px -4.75801px 0px, rgb(0, 0, 0) -0.560763px -4.96846px 0px, rgb(0, 0, 0) 0.437495px -4.98082px 0px, rgb(0, 0, 0) 1.41831px -4.79462px 0px, rgb(0, 0, 0) 2.34258px -4.41727px 0px, rgb(0, 0, 0) 3.17346px -3.86382px 0px, rgb(0, 0, 0) 3.87783px -3.15633px 0px, rgb(0, 0, 0) 4.4276px -2.32301px 0px, rgb(0, 0, 0) 4.80085px -1.39708px 0px, rgb(0, 0, 0) 4.98271px -0.415447px 0px;
 }
 
-#logo {
-  left: 570px;
-  top: 814px;
-}
-
-#scrollContainer {
-  overflow: hidden;
-  height: 1080px;
-  top: 0px;
-  left: 30px;
-  width: 506px;
+.fullscreen {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 1920px;
   height: 1080px;
 }
 
-#scroll {
-  height: 2160px;
-  animation: slide 20s linear infinite;
-  opacity: 0.7;
+.image-shadow {
+  filter: 
+    drop-shadow(0px 0px 1px black)
+    drop-shadow(0px 0px 1px black)
+    drop-shadow(0px 0px 1px black)
+    drop-shadow(0px 0px 1px black)
+    drop-shadow(0px 0px 1px black);
 }
 
-#scrollBuilder, #scrollTile {
-  display: none;
-}
-
-@keyframes slide { 
-  from {
-    transform: translateY(0px);
-  }
-  to {
-    transform: translateY(-1080px);
-  }
-}
-
-#time {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: center;
-  left: 100px;
-  top: 0px;
-  width: 390px;
-  height: 1080px;
-}
-
-#timeTop {
-  font-size: 80px;
-  text-shadow: black 4px 4px 0px;
-}
-
-#timeMiddle {
+#matchInfo {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 120px;
-  text-align: center;
-  text-shadow: black 6px 6px 0px;
-}
-  
-.digit {
-  width: 80px;
+  flex-direction: column;
+  left: 0px;
+  top: 360px;
+  width: 1920px;
+  font-size: var(--baseFontSize);
 }
 
-.colon {
-  width: 40px;
-}
-
-#timeBottom {
-  font-size: 50px;
-  text-shadow: black 2px 2px 0px;
+#matchInfo > * {
+  height: var(--baseHeight);
 }
 
 #outerPlayersContainer {
   display: flex;
-  align-items: center;
-  justify-content: start;
-  left: 580px;
-  top: 40px;
-  width: 1270px;
-  height: 550px;
+  align-items: start;
+  justify-content: center;
+  left: 0px;
+  top: 530px;
+  width: 1920px;
 }
 
 #playersContainer {
-  transform-origin: center left;
+  transform-origin: center center;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: start;
   justify-content: center;
 }
 
-#playersContainer > * {
-  margin-bottom: 10px;
+.player {
   display: flex;
   flex-direction: column;
   align-items: start;
   justify-content: center;
-}
-
-.name {
-  display: flex;
-  align-items: end;
-  justify-content: start;
+  text-wrap: nowrap;
 }
 
 .name {
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-size: calc(var(--baseFontSize) * 2);
+  height: calc(var(--baseHeight) * 2);
+}
+
+.team, .vs {
+  font-size: var(--baseFontSize);
+  height: calc(var(--baseHeight));
+  font-family: 'Mohave';
 }
 
 .team {
-  font-size: 20px;
-  text-shadow: black 2px 2px 0px;
+  margin-left: calc(var(--baseFontSize) / 6);
+}
+
+.vs {
+  display: flex;
+  height: calc(var(--baseHeight) * 1.9);
+  align-items: end;
 }
 
 .team[team="Team Aya"] {
-  color: #aaaaaa;
+  color: #FD68B1;
 }
 
 .team[team="Team Hatate"] {
-  color: #55ACEE;
+  color: #69FF68;
 }
 
-.team[team="Team Soleil"] {
-  color: #ffc400;
+.team[team="Team Momiji"] {
+  color: #6AFFFF;
 }
 
-.team[team="Team Muguet"] {
-  margin-top: 50px;
-  color: #bfbdd3;
+.vs {
+  color: #888;
+  margin-right: calc(var(--baseFontSize) / 3);
 }
 
-
-.nameJP {
-  font-size: 27px;
-  text-shadow: black 3px 3px 0px;
-  margin-left: 15px;
+#timeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  left: 0px;
+  top: 770px;
+  width: 1920px;
+  height: 260px;
 }
 
-.nameEN {
-  font-size: 54px;
-  text-shadow: black 5px 5px 0px;
+#time {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--baseFontSize) * 2.8);
+  text-align: center;
+  margin-top: calc(-0.3 * var(--baseFontSize));
 }
 
-#matchInfo {
-  left: 580px;
-  top: 610px;
-  width: 1340px;
+#time-nextmatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--baseFontSize);
+}
+  
+.digit {
+  width: calc(var(--baseFontSize) * 3 / 2);
 }
 
-#gameJP {
-  font-size: 54px;
-  color: #d07d43;
-  text-shadow: black 3px 3px 0px;
-}
-
-#gameEN {
-  font-size: 54px;
-  text-shadow: black 3px 3px 0px;
-}
-
-#category {
-  font-size: 54px;
-  text-shadow: black 3px 3px 0px;
+.colon {
+  width: calc(var(--baseFontSize) * 3 / 4);
 }

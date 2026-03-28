@@ -1,39 +1,46 @@
-// Touhou World Cup 2025 https://touhouworldcup.com/
-// Copyright (c) 2025 Paul Schwandes / 32th System
-// All Rights Reserved.
+/*
+ * Touhou World Cup 2026 https://touhouworldcup.com/
+ * Copyright (c) 2026 Paul Schwandes / 32th System
+ * All Rights Reserved.
+ */
 
-import { RunData, Timer } from 'nodecg-speedcontrol/src/types'
-import { querySelector, params, setText, waitForReplicants, onLoad } from 'src/shared/browser-common'
-import { TextControl } from 'src/types/schemas/text-control'
-import { ActiveAudio } from 'src/types/schemas/active-audio'
+import { Timer } from 'nodecg-speedcontrol/src/types'
+import { querySelector, params, setText, onLoad, nodecg } from '../../shared/common'
+import { TextControl } from '../../types/schemas/text-control'
+import { ActiveAudio } from '../../types/schemas/active-audio'
 import { TextFitOption } from 'textfit'
-import { getGameDataByRun } from 'src/shared/games'
-import { msToString, setStretchText, runReplicant } from 'src/graphics/common'
+import { getGameDataByRun } from '../../shared/games'
+import { msToString, setStretchText, match, setupStyles } from '../../graphics/graphic'
+import { parseResults } from '../results/parseResults'
+import { i18n } from '../i18n'
 
-const timerReplicant = nodecg.Replicant<Timer>('timer', 'nodecg-speedcontrol')
-const textControlReplicant = nodecg.Replicant<TextControl>('text-control', 'twc-2025')
-const activeAudio = nodecg.Replicant<ActiveAudio>('active-audio', 'twc-2025')
-waitForReplicants(timerReplicant, runReplicant, textControlReplicant, activeAudio)
-onLoad(async () => {
-  activeAudio.on('change', onActiveAudioChange)
-  runReplicant.on('change', onRunChange)
-  textControlReplicant.on('change', onTextControlChange)
-  timerReplicant.on('change', onTimerChange)
-  setInterval(updateTimer, 10)
-})
-
+const timerReplicant = nodecg.Replicant<Timer>('timer')
+const textControlReplicant = nodecg.Replicant<TextControl>('text-control')
+const activeAudio = nodecg.Replicant<ActiveAudio>('active-audio')
 const selectedPlayers = (params.get('selectedPlayers') ?? '').split('').map(character => {
   return parseInt(character, 10)
 })
-const playerCount = selectedPlayers.length
 
-const pofv = params.has('pofv')
-Array.from(document.getElementsByClassName('layoutCss'))
-  .map(elem => elem as HTMLLinkElement)
-  .forEach((elem, index) => {
-    elem.disabled = pofv || index !== playerCount - 1
+onLoad(timerReplicant, match, textControlReplicant, activeAudio, async () => {
+  setupStyles(`#P${selectedPlayers.length}`)
+}, async () => {
+  for (let i = 0; i < selectedPlayers.length; i++) {
+    document.body.appendChild(querySelector<HTMLTemplateElement>('#plate').content.cloneNode(true))
+  }
+  document.querySelectorAll('.plate').forEach((p, i) => {
+    p.id = `plate${i}`
   })
-querySelector<HTMLLinkElement>('#pofvCss').disabled = !pofv
+  const { game, category } = getGameDataByRun(match.value)
+  setStretchText('#game', i18n.gameName(game))
+  setStretchText('#category', i18n.categoryName(category))
+  querySelector('#resetTimeText').innerHTML = i18n.resetTime.join('<br>')
+
+  activeAudio.on('change', onActiveAudioChange)
+  match.on('change', updatePlayerNames)
+  textControlReplicant.on('change', onTextControlChange)
+  timerReplicant.on('change', onTimerChange)
+  updateTimer()
+})
 
 const textFitOptions: TextFitOption = {
   alignVert: true,
@@ -51,24 +58,18 @@ function onActiveAudioChange (streamNumber: number | undefined): void {
 }
 
 function updatePlayerNames (): void {
-  const run = runReplicant.value
+  const run = match.value
   const tc = textControlReplicant.value
   if (run === undefined || tc === undefined) return
 
   let i = 0
   for (const index of selectedPlayers) {
-    const name = run?.teams[index]?.players[tc.selectedPlayer - 1]?.name ?? ''
+    const player = run.teams[index]?.players[tc.selectedPlayer - 1]
+    if (player === undefined) continue
+    const name = i18n.playerName(player)
     setText(`#plate${i} > .plateMiddle`, name, textFitOptions)
     i++
   }
-}
-
-function onRunChange (run: RunData | undefined): void {
-  const { game, category } = getGameDataByRun(run)
-  querySelector('#gameJP').innerText = game.japaneseName
-  setStretchText('#gameEN', game.englishName)
-  setStretchText('#category', category)
-  updatePlayerNames()
 }
 
 function onTextControlChange (tc: TextControl | undefined, oldTc: TextControl | undefined): void {
@@ -76,11 +77,16 @@ function onTextControlChange (tc: TextControl | undefined, oldTc: TextControl | 
   let i = -1
   for (const index of selectedPlayers) {
     i++
-    setText(`#plate${i} > .plateTop`, tc.top[index], textFitOptions)
-    setText(`#plate${i} > .plateBottom`, tc.bottom[index], textFitOptions)
+    setText(`#plate${i} > .plateTop`, parseCurrentText(tc.top[index] ?? ''), textFitOptions)
+    setText(`#plate${i} > .plateBottom`, parseTargetText(tc.bottom[index] ?? ''), textFitOptions)
   }
 
-  setText('#resultsInner', adjustResultsText(tc.results), {
+  const resultsText = parseResults({
+    results: tc.results,
+    run: match.value,
+    mode: selectedPlayers.length !== 2 ? 'game' : 'game-single-line'
+  })
+  setText('#resultsInner', resultsText, {
     alignHoriz: true,
     alignVert: true,
     multiLine: true,
@@ -92,24 +98,29 @@ function onTextControlChange (tc: TextControl | undefined, oldTc: TextControl | 
   }
 }
 
-function adjustResultsText (results: string): string {
-  if (selectedPlayers.length !== 2 || pofv) return results
-  // remove single line breaks only
-  // there is probably a way to do this with regexr
-  return results.replaceAll('\n\n', '<--->')
-    .replaceAll('\n', ' ')
-    .replaceAll('<--->', '\n')
+function parseCurrentText (text: string): string {
+  const result = /CURRENT: ([^\s]+)(?: (.*))?/g.exec(text)
+  if (result === null) return text
+  return i18n.playerCurrentText({ shottype: result[1], missOrScore: result[2] })
+}
+
+function parseTargetText (text: string): string {
+  const result = /TARGET(?: \(#(\d)( [Tt][Ii][Ee])?\))?: ([^\s]+)(?: (.*))?/g.exec(text)
+  if (result === null) return text
+  if (result[1] === undefined) return i18n.playerTargetText() // no target place
+  const targetPlace = parseInt(result[1])
+  const tie = result[2] === ' TIE' // trailing space important
+  const target = { shottype: result[3], missOrScore: result[4] }
+  return i18n.playerTargetText({ targetPlace, tie, target })
 }
 
 let lastTimer: Timer | undefined
 let lastTimerUpdateTime = Date.now()
 
 function updateTimer (): void {
-  if (lastTimer === undefined) return
-  if (runReplicant.status !== 'declared') return
-
-  const run = runReplicant.value
-  if (run === undefined) return
+  window.requestAnimationFrame(updateTimer)
+  const run = match.value
+  if (lastTimer === undefined || run === undefined) return
 
   let ms = lastTimer.milliseconds
   if (lastTimer.state === 'running') {
@@ -138,7 +149,7 @@ function updateTimer (): void {
       continue
     }
     elem.style.removeProperty('display')
-    elem.style.width = character === ':' ? '20px' : '55px'
+    elem.style.width = character === ':' ? '20px' : '40px'
     elem.innerText = character
   }
 }

@@ -1,47 +1,39 @@
-<!-- Touhou World Cup 2025 https://touhouworldcup.com/ -->
-<!-- Copyright (c) 2025 Paul Schwandes / 32th System -->
+<!-- Touhou World Cup 2026 https://touhouworldcup.com/ -->
+<!-- Copyright (c) 2026 Paul Schwandes / 32th System -->
 <!-- All Rights Reserved. -->
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" href="text-control/text-control.css">
-  </head>
-  <body>
-    <button class="update">Update</button>
-    <span>
-      <label for="player-N">Select player:</label>
-      <input type="text" id="player-N" name="player-N">
-    </span>
-    
-    <h3>Top/Bottom Texts</h3>
-    <div id="plateTexts">
-      <span>Name</span>
-      <span>Top</span>
-      <span>Bottom</span>
-      <span id="p0_middle">Player 1</span>
-      <input type="text" id="p0_top"></input>
-      <input type="text" id="p0_bottom"></input>
-      <span id="p1_middle">Player 2</span>
-      <input type="text" id="p1_top"></input>
-      <input type="text" id="p1_bottom"></input>
-      <span id="p2_middle">Player 3</span>
-      <input type="text" id="p2_top"></input>
-      <input type="text" id="p2_bottom"></input>
-      <span id="p3_middle">Player 4</span>
-      <input type="text" id="p3_top"></input>
-      <input type="text" id="p3_bottom"></input>
-      <span id="p4_middle">Player 5</span>
-      <input type="text" id="p4_top"></input>
-      <input type="text" id="p4_bottom"></input>
-    </div>
-   
-    <h3>Results Box (Game)</h3>
-    <textarea id="results" rows="12" cols="70"></textarea>
-    
-    <h3>Results Box (Final Results)</h3>
-    <textarea id="resultsFinal" rows="12" cols="70"></textarea>
-    <br>
-    <button class="update">Update</button>
-    <script type="module" src="./text-control/text-control.ts"></script>
-  </body>
+<head>
+  <link rel="stylesheet" href="text-control/text-control.css">
+</head>
+<body>
+  <button class="update">Update</button>
+  <span>
+    <label for="player-N">Select player:</label>
+    <input type="text" id="player-N" name="player-N">
+  </span>
+  
+  <span>Top/Bottom Texts</span>
+  <div id="plateTexts">
+    <span>Name</span>
+    <span>Top</span>
+    <span>Bottom</span>
+    <span id="p0_middle">Player 1</span>
+    <input type="text" id="p0_top"></input>
+    <input type="text" id="p0_bottom"></input>
+    <span id="p1_middle">Player 2</span>
+    <input type="text" id="p1_top"></input>
+    <input type="text" id="p1_bottom"></input>
+    <span id="p2_middle">Player 3</span>
+    <input type="text" id="p2_top"></input>
+    <input type="text" id="p2_bottom"></input>
+  </div>
+  
+  <div>Results</div>
+  <textarea id="results" rows="3" cols="70"></textarea>
+  
+  <br>
+  <button class="update">Update</button>
+  <script type="module" src="text-control/text-control.ts"></script>
+</body>
 </html>
