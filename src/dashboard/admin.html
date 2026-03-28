@@ -7,23 +7,48 @@
   <link rel="stylesheet" href="admin/admin.css">
 </head>
 <body>
-  <div id="buttons"></div>
-  <div>
-    <label>Select world feed server source</label>
-    <select id="select-server"></select>
-  </div>
-  <label id="is-connected"></label>
-  <div>
+  <div id="general-admin">
     <div>
-      Old log ID
-      <input id="oldLogId" type="text">
+      <h2>General Zone</h2>
+    </div>
+    <div class="regional">
+      <h3>Set Stream Delay</h3>
+      <input type="number" id="stream-delay-input"></select>
+      <button id="stream-delay-update">Update</button>
+    </div>
+    <div class="button-container" id="general-buttons">
+      <h3>General Buttons</h3>
     </div>
     <div>
-      New log ID
-      <input id="newLogId" type="text">
+      <h3>Update a remote log ID</h3>
+      <div>
+        Old log ID
+        <input id="oldLogId" type="text">
+      </div>
+      <div>
+        New log ID
+        <input id="newLogId" type="text">
+      </div>
+      <button id="updateLogId">Update log id</button>
     </div>
-    <button id="updateLogId">Update log id</button>
   </div>
+  <div id="danger-zone">
+    <div>
+      <h2>DANGER ZONE</h2>
+      Below this area are incredibly dangerous admin panels
+      that can mess up NodeCG / settings / etc.
+      Use only if you know exactly what they do!!!
+    </div>
+    <div class="button-container" id="danger-buttons">
+      <h3>Danger Buttons</h3>
+    </div>
+    <div>
+      <h3>World feed server</h3>
+      <select id="select-server"></select>
+      <label id="is-connected"></label>
+    </div>
+  </div>
+  
   <script type="module" src="admin/admin.ts"></script>
 </body>
 </html>

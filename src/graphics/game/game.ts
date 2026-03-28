@@ -13,10 +13,12 @@ import { getGameDataByRun } from '../../shared/games'
 import { msToString, setStretchText, match, setupStyles } from '../../graphics/graphic'
 import { parseResults } from '../results/parseResults'
 import { i18n } from '../i18n'
+import { StreamDelay } from 'src/types/schemas/stream-delay'
 
 const timerReplicant = nodecg.Replicant<Timer>('timer')
 const textControlReplicant = nodecg.Replicant<TextControl>('text-control')
 const activeAudio = nodecg.Replicant<ActiveAudio>('active-audio')
+const streamDelay = nodecg.Replicant<StreamDelay>('stream-delay')
 const selectedPlayers = (params.get('selectedPlayers') ?? '').split('').map(character => {
   return parseInt(character, 10)
 })
@@ -37,7 +39,9 @@ onLoad(timerReplicant, match, textControlReplicant, activeAudio, async () => {
 
   activeAudio.on('change', onActiveAudioChange)
   match.on('change', updatePlayerNames)
-  textControlReplicant.on('change', onTextControlChange)
+  textControlReplicant.on('change', (newValue, oldValue) => {
+    void onTextControlChange(newValue, oldValue)
+  })
   timerReplicant.on('change', onTimerChange)
   updateTimer()
 })
@@ -47,14 +51,22 @@ const textFitOptions: TextFitOption = {
   maxFontSize: 500
 }
 
+async function delay (): Promise<void> {
+  const wait = (streamDelay.value ?? 2) * 1000
+  await new Promise((resolve) => setTimeout(resolve, wait))
+}
+
 function onActiveAudioChange (streamNumber: number | undefined): void {
   if (streamNumber === undefined) return
   const index = selectedPlayers.indexOf(streamNumber)
   const element = querySelector('#audio')
-  element.classList.add('fadeOut')
-  setTimeout(() => {
-    element.classList = `fadeIn audio-${index}`
-  }, 500)
+
+  void delay().then(() => {
+    element.classList.add('fadeOut')
+    setTimeout(() => {
+      element.classList = `fadeIn audio-${index}`
+    }, 500)
+  })
 }
 
 function updatePlayerNames (): void {
@@ -72,8 +84,14 @@ function updatePlayerNames (): void {
   }
 }
 
-function onTextControlChange (tc: TextControl | undefined, oldTc: TextControl | undefined): void {
-  if (tc === undefined) return
+async function onTextControlChange (value: TextControl | undefined, oldValue: TextControl | undefined): Promise<void> {
+  if (value === undefined) return
+  const tc: TextControl = JSON.parse(JSON.stringify(value))
+  if (tc.selectedPlayer !== oldValue?.selectedPlayer) {
+    updatePlayerNames()
+  }
+
+  await delay()
   let i = -1
   for (const index of selectedPlayers) {
     i++
@@ -92,10 +110,6 @@ function onTextControlChange (tc: TextControl | undefined, oldTc: TextControl | 
     multiLine: true,
     maxFontSize: 200
   })
-
-  if (tc.selectedPlayer !== oldTc?.selectedPlayer) {
-    updatePlayerNames()
-  }
 }
 
 function parseCurrentText (text: string): string {
@@ -122,13 +136,10 @@ function updateTimer (): void {
   const run = match.value
   if (lastTimer === undefined || run === undefined) return
 
-  let ms = lastTimer.milliseconds
-  if (lastTimer.state === 'running') {
-    ms += Date.now() - lastTimerUpdateTime
-  }
-
+  const compensation = lastTimer.state === 'running' ? Date.now() - lastTimerUpdateTime : 0
+  const ms = lastTimer.milliseconds + compensation
   const totalMs = (run.estimateS ?? 0) * 1000
-  const remainingMs = totalMs - ms
+  const remainingMs = Math.max(totalMs, totalMs - ms + (streamDelay.value ?? 2) * 1000)
 
   const remainingTime = querySelector('#remainingTime')
   const resetTimeText = querySelector('#resetTimeText')

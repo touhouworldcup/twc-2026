@@ -7,31 +7,40 @@
 import { bundleConfig, nodecg, onLoad, querySelector } from '../../shared/common'
 import { WorldDataTargetServer } from '../../types/schemas/world-data-target-server'
 import { WorldDataConnected } from '../../types/schemas/world-data-connected'
+import { StreamDelay } from 'src/types/schemas/stream-delay'
 
 const config = bundleConfig.regions
 const isWorldFeedNodeCG = config.currentRegion === 'world'
 
 const selectServerReplicant = nodecg.Replicant<WorldDataTargetServer>('world-data-target-server')
 const connected = nodecg.Replicant<WorldDataConnected>('world-data-connected')
-onLoad(selectServerReplicant, connected)
+const streamDelay = nodecg.Replicant<StreamDelay>('stream-delay')
+onLoad(selectServerReplicant, connected, streamDelay)
 
-createButtons('reset-text-info', 'Reset text info', '#24e6f7ff', true)
-createButtons('reload-pages', 'Reload all browser pages', '#f3ec2aff')
-createButtons('update-runs', 'Run database update', '#ff7f08ff', true)
-createButtons('reboot-nodecg', 'Reboot NodeCG', '#ee4c24ff')
+createButtons('#general-buttons', 'reset-text-info', 'Reset text info', '#24e6f7ff', true)
+createButtons('#general-buttons', 'reload-pages', 'Reload all browser pages', '#f3ec2aff')
+createButtons('#danger-buttons', 'update-runs', 'Run database update', '#ff7f08ff', true)
+createButtons('#danger-buttons', 'reboot-nodecg', 'Reboot NodeCG', '#ee4c24ff')
 
-function createButtons (actionName: string, description: string, color: string, worldOnly: boolean = false): void {
-  if (!worldOnly || isWorldFeedNodeCG) createActionButton(actionName, description, color, false)
-  if (!worldOnly && isWorldFeedNodeCG) createActionButton(actionName, description, color, true)
+type Container = '#general-buttons' | '#danger-buttons'
+function createButtons (
+  container: Container,
+  actionName: string,
+  description: string,
+  color: string,
+  worldOnly: boolean = false
+): void {
+  if (!worldOnly || isWorldFeedNodeCG) createActionButton(container, actionName, description, color, false)
+  if (!worldOnly && isWorldFeedNodeCG) createActionButton(container, actionName, description, color, true)
 }
 
-function createActionButton (actionName: string, description: string, color: string, subs: boolean): void {
+function createActionButton (container: Container, actionName: string, description: string, color: string, subs: boolean): void {
   const btn = document.createElement('button')
   const text = `${subs ? '!! TO ALL !! ' : ''}${description}`
   btn.style.backgroundColor = color
   if (subs) btn.style.border = '2px solid red'
   btn.innerHTML = text
-  querySelector('#buttons').appendChild(btn)
+  querySelector(container).appendChild(btn)
   btn.addEventListener('click', () => {
     btn.disabled = true
     void nodecg.sendMessage(actionName, subs).then((result) => {
@@ -77,3 +86,16 @@ querySelector('#updateLogId').onclick = () => {
   void nodecg.sendMessage('change-log-id', data)
   console.log('Sending update log message', data)
 }
+
+const streamDelayInput = querySelector<HTMLInputElement>('#stream-delay-input')
+querySelector('#stream-delay-update').onclick = () => {
+  const delay = parseFloat(streamDelayInput.value)
+  if (isNaN(delay)) {
+    streamDelayInput.value = 'Invalid input'
+    return
+  }
+  streamDelay.value = delay
+}
+streamDelay.on('change', (val) => {
+  streamDelayInput.value = String(val)
+})

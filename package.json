@@ -79,7 +79,7 @@
       {
         "name": "admin",
         "title": "Admin",
-        "width": 3,
+        "width": 6,
         "file": "admin.html"
       }
     ],

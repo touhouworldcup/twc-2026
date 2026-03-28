@@ -5,21 +5,17 @@
  */
 
 import { WorldFeedLayoutUrl } from 'src/types/schemas/world-feed-layout-url'
-import { key, nodecg, onLoad, params, region } from '../../shared/common'
+import { key, nodecg, onLoad } from '../../shared/common'
+import { StreamDelay } from 'src/types/schemas/stream-delay'
 
 const worldFeedLayoutUrl = nodecg.Replicant<WorldFeedLayoutUrl>('world-feed-layout-url')
-
-function getDelay (paramName: string, defaultEn: number, defaultOther: number): number {
-  const param = params.get(paramName)
-  if (param !== null) return parseFloat(param)
-  const result = region === 'en' ? defaultEn : defaultOther
-  console.log({ param, paramName, defaultEn, defaultOther, result })
-  return result
+const streamDelay = nodecg.Replicant<StreamDelay>('stream-delay')
+function getDelay (offset: number): number {
+  const delay = streamDelay.value ?? 2
+  return (delay + offset) * 1000
 }
 
-const delayFadeOut = getDelay('delayFadeOut', 7, 2) * 1000
-const delayFadeIn = getDelay('delayFadeIn', 13, 8) * 1000
-onLoad(worldFeedLayoutUrl, () => {
+onLoad(worldFeedLayoutUrl, streamDelay, () => {
   worldFeedLayoutUrl.on('change', (url) => {
     void update(url)
   })
@@ -45,7 +41,7 @@ async function update (worldFeedUrl: string | undefined): Promise<void> {
     console.log('Removing old regional overlay', iframe.src)
     setTimeout(() => {
       iframe.remove()
-    }, delayFadeOut)
+    }, getDelay(-2))
   })
 
   const iframe = document.createElement('iframe')
@@ -57,7 +53,7 @@ async function update (worldFeedUrl: string | undefined): Promise<void> {
     iframe.style.opacity = '0'
     setTimeout(() => {
       iframe.style.opacity = '1'
-    }, delayFadeIn)
+    }, getDelay(2))
   }
   iframe.src = regionalUrl
   document.body.appendChild(iframe)
