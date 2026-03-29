@@ -16,7 +16,8 @@ export function parseResults (options: {
   if (results === undefined) return ''
   if (run === undefined) return results
 
-  const parsed = results.split(/\r?\n/).flatMap((line) => {
+  const rawLines = results.split(/\r?\n/)
+  const parsed = rawLines.flatMap((line) => {
     const match = /([^(:]+)(?: \(([^)]+)\))?: (-|\d+\.?\d*)(?: [Pp][Tt][Ss], ([^\s]+) (.*))?/g.exec(line)
     if (match === null) return []
 
@@ -35,7 +36,7 @@ export function parseResults (options: {
     return [{ team, pts, shottype, missOrScore }]
   }).toSorted((a, b) => mode === 'final-results' ? b.pts - a.pts : 0)
 
-  if (parsed.length !== run?.teams.length) return results
+  if (parsed.length !== rawLines.length) return results
   const samePlace = parsed.every(p => p.pts === parsed[0].pts)
   let place = 0
 
