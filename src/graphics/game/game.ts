@@ -139,7 +139,7 @@ function updateTimer (): void {
   const compensation = lastTimer.state === 'running' ? Date.now() - lastTimerUpdateTime : 0
   const ms = lastTimer.milliseconds + compensation
   const totalMs = (run.estimateS ?? 0) * 1000
-  const remainingMs = Math.max(totalMs, totalMs - ms + (streamDelay.value ?? 2) * 1000)
+  const remainingMs = Math.min(totalMs, totalMs - ms + (streamDelay.value ?? 2) * 1000)
 
   const remainingTime = querySelector('#remainingTime')
   const resetTimeText = querySelector('#resetTimeText')
