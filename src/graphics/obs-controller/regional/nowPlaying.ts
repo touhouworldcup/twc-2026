@@ -5,7 +5,8 @@
  */
 
 import { obs } from '../obs-controller'
-import { bundleConfig } from '../../../shared/common'
+import { beefweeb } from '../beefweb/beefweb'
+import { GetPlayerStateResponse } from 'src/graphics/obs-controller/beefweb/beefweb-generated-client'
 
 let lastText: string = ''
 export function setupNowPlaying (): void {
@@ -55,15 +56,6 @@ async function setNowPlayingScrolling (filterEnabled: boolean, cx?: number): Pro
 
 const IGNORE_TITLES = new Set(['COMMENTARY START'])
 
-interface FoobarResponse {
-  player: {
-    activeItem: {
-      columns: string[]
-    }
-    playbackState: string
-  }
-}
-
 const NOT_PLAYING: ResponseUpdate = { type: 'update', text: '' }
 interface ResponseUpdate {
   type: 'update'
@@ -77,29 +69,17 @@ interface ResponseIgnore {
 type Response = ResponseUpdate | ResponseIgnore
 
 async function getNowPlaying (): Promise<Response> {
-  const config = bundleConfig.beefweb
-  if (config === undefined) return { type: 'ignore' }
-  const { url, auth } = config
-  const headers: Record<string, string> = {}
-  if (auth !== undefined) {
-    headers.Authorization = `Basic ${btoa(`${auth.user}:${auth.password}`)}`
-  }
-
-  let response: FoobarResponse
+  if (beefweeb === undefined) return NOT_PLAYING
+  let data: GetPlayerStateResponse
   try {
-    const requestUrl = `${url}/api/player?columns=%artist%,%album%20artist%,%title%`
-    const request = await fetch(requestUrl, { headers })
-    if (!request.ok) {
-      throw new Error(`Beefweb Error: ${request.status} ${request.statusText}`)
-    }
-
-    response = await request.json()
+    ({ data } = await beefweeb.player.getPlayerState({
+      columns: ['%artist%', '%album artist%', '%title%']
+    }))
   } catch (error) {
     return NOT_PLAYING
   }
-
-  if (response.player.playbackState !== 'playing') return NOT_PLAYING
-  const [artist, albumArtist, title] = response.player.activeItem.columns
+  if (data.player?.playbackState !== 'playing') return NOT_PLAYING
+  const [artist, albumArtist, title] = data.player?.activeItem?.columns ?? []
   if (IGNORE_TITLES.has(title)) {
     return { type: 'ignore' }
   }

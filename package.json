@@ -56,6 +56,8 @@
   "scripts": {
     "autofix": "npx ts-standard src/graphics/**/*.ts src/dashboard/**/*.ts src/shared/**/*.ts --fix && npx ts-standard src/extension/**/*.ts --project \"src/extension/tsconfig.json\" --fix",
     "clean": "trash graphics dashboard extension shared .parcel-cache",
+    "generate-clients:beefweb": "npx swagger-typescript-api generate -p https://raw.githubusercontent.com/hyperblast/beefweb/master/docs/player-api.yml -o ./src/graphics/obs-controller/beefweb -n beefweb-generated-client.ts",
+    "generate-clients": "npm-run-all --parallel generate-clients:*",
     "build:graphics": "parcel build --no-content-hash --target graphics",
     "build:dashboard": "parcel build --no-content-hash --target dashboard",
     "build:extension": "parcel build --no-content-hash --target extension",

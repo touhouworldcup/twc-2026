@@ -1,6 +1,4 @@
 node_modules
-coverage
-bower_components
 .parcel-cache
 /dashboard
 /graphics
@@ -8,3 +6,4 @@ bower_components
 /shared
 *.tsbuildinfo
 /src/graphics/fonts/KOT.woff
+*-generated-client.ts

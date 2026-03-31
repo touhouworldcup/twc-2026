@@ -55,6 +55,7 @@ async function onSceneTransitionStarted (event: OBSEventTypes['SceneTransitionSt
   const { transitionName, transitionUuid } = event
   const { sceneName: toScene } = await obs.call('GetCurrentProgramScene')
   const fromScene = currentScene
+  currentScene = toScene
   const customEvent = { fromScene, toScene, transitionName, transitionUuid }
   obsSceneTransition.dispatch(customEvent)
   console.log(`Scene transition from ${fromScene} to ${toScene} (${transitionName})`)

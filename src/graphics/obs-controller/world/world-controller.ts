@@ -10,6 +10,7 @@ import { currentScene, obsSceneTransition, SceneTransitionEvent } from '../custo
 import { nodecg } from '../../../shared/common'
 import { WorldFeedLayoutUrl } from 'src/types/schemas/world-feed-layout-url'
 import { redactNodeCGKey } from 'src/shared/common/logging'
+import { beefweeb } from '../beefweb/beefweb'
 
 const activeAudio = nodecg.Replicant<ActiveAudio>('active-audio')
 const worldFeedLayoutUrl = nodecg.Replicant<WorldFeedLayoutUrl>('world-feed-layout-url')
@@ -36,7 +37,7 @@ async function onSceneTransitionStarted (event: SceneTransitionEvent): Promise<v
     executionTime += 1000
   }
   void updateAudioTracks(executionTime)
-  void handleFoobar(executionTime)
+  void handleMusic(executionTime)
   void handleRegionalOverlay(currentScene)
 }
 
@@ -123,29 +124,18 @@ async function setTrackEnabled (inputName: string, enabled: boolean): Promise<vo
   await obs.call('SetInputAudioTracks', { inputName, inputAudioTracks })
 }
 
-function executeCommand (command: string): void {
-  fetch(`http://localhost:8880/api/player/${command}`, { method: 'POST' }).catch((error) => {
-    console.error(`Failed to send command ${command} to foobar`, error)
-  })
-}
-
-async function handleFoobar (executionTime: number): Promise<void> {
-  let response: any
-  try {
-    response = await fetch('http://localhost:8880/api/player').then(async r => await r.json())
-  } catch (error) {
-    console.error('Failed to get foobar player state', error)
-    return
-  }
-  const isPlaying = response.player.activeItem.position > 0
+async function handleMusic (executionTime: number): Promise<void> {
+  if (beefweeb === undefined) return
+  const { data } = await beefweeb.player.getPlayerState()
+  const isPlaying = data.player?.playbackState === 'playing'
   const shouldBePlaying = !isGameplayScene()
   await waitForExecutionTime(executionTime)
   if (isPlaying && !shouldBePlaying) {
     await waitForExecutionTime(executionTime + 1000)
-    void executeCommand('stop')
+    await beefweeb.player.stop()
   }
   if (!isPlaying && shouldBePlaying) {
     await waitForExecutionTime(executionTime + 5000)
-    void executeCommand('play')
+    await beefweeb.player.playCurrent()
   }
 }

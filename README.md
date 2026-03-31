@@ -11,3 +11,9 @@ This repository and its contents are ALL RIGHTS RESERVED. **Unauthorized use of 
 ## Documentation / Development
 
 Documentation for this bundle has become outdated while updating to 2026. New documentation will be written shortly.
+
+```
+npm install
+npm run generate-clients
+npm run build
+```
