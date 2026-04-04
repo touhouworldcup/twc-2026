@@ -73,7 +73,7 @@ async function getNowPlaying (): Promise<Response> {
   let data: GetPlayerStateResponse
   try {
     ({ data } = await beefweeb.player.getPlayerState({
-      columns: ['%artist%', '%album artist%', '%title%']
+      columns: ['%artist%,%album artist%,%title%']
     }))
   } catch (error) {
     return NOT_PLAYING

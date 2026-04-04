@@ -6,16 +6,13 @@
 
 import { setupAudio } from './audio'
 import { setupNowPlaying } from './nowPlaying'
-import { checkVoiceDisplayCrop } from './vc-crop'
+import { setupVoiceDisplayCrop } from './vc-crop'
 import { region } from 'src/shared/common'
 
-export async function initEnglishController (): Promise<void> {
+export async function initRegionalController (): Promise<void> {
   if (region === 'cn') return // no automation yet for CN
 
   setupNowPlaying()
   void setupAudio()
-  void checkVoiceDisplayCrop()
-  setInterval(() => {
-    checkVoiceDisplayCrop().catch(console.error)
-  }, 5000)
+  setupVoiceDisplayCrop()
 }

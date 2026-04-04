@@ -5,7 +5,7 @@
  */
 
 import { OBSResponseTypes } from 'obs-websocket-js'
-import { querySelector } from '../../../shared/common'
+import { querySelector, region } from '../../../shared/common'
 import { obs } from '../obs-controller'
 
 let lastBottomCrop = 0
@@ -36,7 +36,15 @@ async function getVCDisplayTransform (
   return undefined
 }
 
-export async function checkVoiceDisplayCrop (): Promise<void> {
+export function setupVoiceDisplayCrop (): void {
+  if (region === 'jp') return
+  void checkVoiceDisplayCrop()
+  setInterval(() => {
+    checkVoiceDisplayCrop().catch(console.error)
+  }, 5000)
+}
+
+async function checkVoiceDisplayCrop (): Promise<void> {
   if (!obs.identified) return
   const { scenes } = await obs.call('GetSceneList')
   const response = await getVCDisplayTransform(scenes)

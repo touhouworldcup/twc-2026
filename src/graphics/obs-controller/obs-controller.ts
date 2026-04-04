@@ -6,7 +6,7 @@
 
 import { OBSWebSocket } from 'obs-websocket-js'
 import { initWorldFeedController } from './world/world-controller'
-import { initEnglishController } from './regional/regional-controller'
+import { initRegionalController } from './regional/regional-controller'
 import { registerCustomOBSEvents } from './custom-obs-events'
 import { setupControllerLogging } from './logger'
 import { bundleConfig, region } from '../../shared/common'
@@ -121,6 +121,6 @@ async function initController (): Promise<void> {
   if (region === 'world') {
     await initWorldFeedController()
   } else {
-    await initEnglishController()
+    await initRegionalController()
   }
 }

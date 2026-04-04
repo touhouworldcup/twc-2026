@@ -40,6 +40,8 @@ function isGameScene (scene: string): boolean {
 }
 
 async function handleCommsAudio (commsNowLive: boolean): Promise<void> {
+  if (region === 'jp') return
+
   const inputAudioTracks: Record<number, boolean> = {}
   for (const track of [2, 3, 4, 5, 6]) {
     inputAudioTracks[track] = false
