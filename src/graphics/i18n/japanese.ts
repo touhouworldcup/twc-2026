@@ -1,5 +1,5 @@
 import { english } from './english'
-import { I18N, categoryNames, easternDateTimeDisplay, getPlayerName, results } from './i18n-util'
+import { I18N, easternDateTimeDisplay, results } from './i18n-util'
 
 export const japanese: I18N = {
   nowPlaying: english.nowPlaying,
@@ -8,9 +8,9 @@ export const japanese: I18N = {
   results: results('未完走', ','),
   artwork: (a) => `アーティスト: ${a}`,
   teamName: (t) => t,
-  playerName: (p) => getPlayerName(p, 'cn', 'jp'),
+  playerName: english.playerName,
   gameName: (g) => g.japaneseName,
-  categoryName: categoryNames('Lunaticサバイバル', 'Lunaticスコアタ', 'Extraスコアタ', '予選'),
+  categoryName: english.categoryName,
   localTime: (date) => easternDateTimeDisplay('Asia/Tokyo', date),
   resetTime: ['RESET', 'TIME'],
   finalResults: 'FINAL RESULTS'

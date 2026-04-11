@@ -35,7 +35,7 @@ export const games = [
   game('TH17', '#A27279', 'WBaWC', '東方鬼形獣', 'Wily Beast and Weakest Creature'),
   game('TH18', '#26D893', 'UM', '東方虹龍洞', 'Unconnected Marketeers'),
   game('TH19', '#12B306', 'UDoALG', '東方獣王園', 'Unfinished Dream of All Living Ghost'),
-  game('TH20', '#f4f4f2', 'FW', '東方錦上京', 'Fossilized Wonders'),
+  game('TH20', '#d2d2b2', 'FW', '東方錦上京', 'Fossilized Wonders'),
   game('TH00', '#4d4d4d', '?', '', '')
 ]
 
