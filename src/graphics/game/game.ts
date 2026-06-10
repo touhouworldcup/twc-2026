@@ -22,9 +22,10 @@ const streamDelay = nodecg.Replicant<StreamDelay>('stream-delay')
 const selectedPlayers = (params.get('selectedPlayers') ?? '').split('').map(character => {
   return parseInt(character, 10)
 })
+const isFocusLayout = params.has('focus')
 
 onLoad(timerReplicant, match, textControlReplicant, activeAudio, async () => {
-  setupStyles(`#P${selectedPlayers.length}`)
+  setupStyles(`#P${selectedPlayers.length}${isFocusLayout ? '_focus' : ''}`)
 }, async () => {
   for (let i = 0; i < selectedPlayers.length; i++) {
     document.body.appendChild(querySelector<HTMLTemplateElement>('#plate').content.cloneNode(true))
@@ -99,10 +100,14 @@ async function onTextControlChange (value: TextControl | undefined, oldValue: Te
     setText(`#plate${i} > .plateBottom`, parseTargetText(tc.bottom[index] ?? ''), textFitOptions)
   }
 
+  let mode: 'game' | 'game-single-line' = 'game'
+  if (selectedPlayers.length === 2 && !isFocusLayout) {
+    mode = 'game-single-line'
+  }
   const resultsText = parseResults({
     results: tc.results,
     run: match.value,
-    mode: selectedPlayers.length !== 2 ? 'game' : 'game-single-line'
+    mode
   })
   setText('#resultsInner', resultsText, {
     alignHoriz: true,

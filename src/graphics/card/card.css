@@ -6,10 +6,114 @@
 
 @import url('../graphic.css');
 
+:root {
+  --text-shadow-large:
+    rgb(0, 0, 0) 5px 0px 0px,
+    rgb(0, 0, 0) 4.90033px 0.993347px 0px,
+    rgb(0, 0, 0) 4.60531px 1.94709px 0px,
+    rgb(0, 0, 0) 4.12668px 2.82321px 0px,
+    rgb(0, 0, 0) 3.48353px 3.58678px 0px,
+    rgb(0, 0, 0) 2.70151px 4.20736px 0px,
+    rgb(0, 0, 0) 1.81179px 4.6602px 0px,
+    rgb(0, 0, 0) 0.849836px 4.92725px 0px,
+    rgb(0, 0, 0) -0.145998px 4.99787px 0px,
+    rgb(0, 0, 0) -1.13601px 4.86924px 0px,
+    rgb(0, 0, 0) -2.08073px 4.54649px 0px,
+    rgb(0, 0, 0) -2.94251px 4.04248px 0px,
+    rgb(0, 0, 0) -3.68697px 3.37732px 0px,
+    rgb(0, 0, 0) -4.28444px 2.57751px 0px,
+    rgb(0, 0, 0) -4.71111px 1.67494px 0px,
+    rgb(0, 0, 0) -4.94996px 0.7056px 0px,
+    rgb(0, 0, 0) -4.99147px -0.291871px 0px,
+    rgb(0, 0, 0) -4.83399px -1.27771px 0px,
+    rgb(0, 0, 0) -4.48379px -2.2126px 0px,
+    rgb(0, 0, 0) -3.95484px -3.05929px 0px,
+    rgb(0, 0, 0) -3.26822px -3.78401px 0px,
+    rgb(0, 0, 0) -2.4513px -4.35788px 0px,
+    rgb(0, 0, 0) -1.53666px -4.75801px 0px,
+    rgb(0, 0, 0) -0.560763px -4.96846px 0px,
+    rgb(0, 0, 0) 0.437495px -4.98082px 0px,
+    rgb(0, 0, 0) 1.41831px -4.79462px 0px,
+    rgb(0, 0, 0) 2.34258px -4.41727px 0px,
+    rgb(0, 0, 0) 3.17346px -3.86382px 0px,
+    rgb(0, 0, 0) 3.87783px -3.15633px 0px,
+    rgb(0, 0, 0) 4.4276px -2.32301px 0px,
+    rgb(0, 0, 0) 4.80085px -1.39708px 0px,
+    rgb(0, 0, 0) 4.98271px -0.415447px 0px;
+
+  --text-shadow-medium:
+    rgb(0, 0, 0) 3.75px 0px 0px,
+    rgb(0, 0, 0) 3.675px 0.745px 0px,
+    rgb(0, 0, 0) 3.454px 1.46px 0px,
+    rgb(0, 0, 0) 3.095px 2.117px 0px,
+    rgb(0, 0, 0) 2.613px 2.69px 0px,
+    rgb(0, 0, 0) 2.026px 3.156px 0px,
+    rgb(0, 0, 0) 1.359px 3.495px 0px,
+    rgb(0, 0, 0) 0.637px 3.695px 0px,
+    rgb(0, 0, 0) -0.11px 3.748px 0px,
+    rgb(0, 0, 0) -0.852px 3.652px 0px,
+    rgb(0, 0, 0) -1.561px 3.41px 0px,
+    rgb(0, 0, 0) -2.207px 3.032px 0px,
+    rgb(0, 0, 0) -2.765px 2.533px 0px,
+    rgb(0, 0, 0) -3.213px 1.933px 0px,
+    rgb(0, 0, 0) -3.533px 1.256px 0px,
+    rgb(0, 0, 0) -3.712px 0.529px 0px,
+    rgb(0, 0, 0) -3.744px -0.219px 0px,
+    rgb(0, 0, 0) -3.625px -0.958px 0px,
+    rgb(0, 0, 0) -3.363px -1.659px 0px,
+    rgb(0, 0, 0) -2.966px -2.294px 0px,
+    rgb(0, 0, 0) -2.451px -2.838px 0px,
+    rgb(0, 0, 0) -1.838px -3.268px 0px,
+    rgb(0, 0, 0) -1.152px -3.569px 0px,
+    rgb(0, 0, 0) -0.421px -3.726px 0px,
+    rgb(0, 0, 0) 0.328px -3.736px 0px,
+    rgb(0, 0, 0) 1.064px -3.596px 0px,
+    rgb(0, 0, 0) 1.757px -3.313px 0px,
+    rgb(0, 0, 0) 2.38px -2.898px 0px,
+    rgb(0, 0, 0) 2.908px -2.367px 0px,
+    rgb(0, 0, 0) 3.321px -1.742px 0px,
+    rgb(0, 0, 0) 3.601px -1.048px 0px,
+    rgb(0, 0, 0) 3.737px -0.312px 0px;
+
+  --text-shadow-small:
+    rgb(0, 0, 0) 2.5px 0px 0px,
+    rgb(0, 0, 0) 2.45px 0.497px 0px,
+    rgb(0, 0, 0) 2.303px 0.974px 0px,
+    rgb(0, 0, 0) 2.063px 1.412px 0px,
+    rgb(0, 0, 0) 1.742px 1.793px 0px,
+    rgb(0, 0, 0) 1.351px 2.104px 0px,
+    rgb(0, 0, 0) 0.906px 2.33px 0px,
+    rgb(0, 0, 0) 0.425px 2.464px 0px,
+    rgb(0, 0, 0) -0.073px 2.499px 0px,
+    rgb(0, 0, 0) -0.568px 2.435px 0px,
+    rgb(0, 0, 0) -1.04px 2.273px 0px,
+    rgb(0, 0, 0) -1.471px 2.021px 0px,
+    rgb(0, 0, 0) -1.843px 1.689px 0px,
+    rgb(0, 0, 0) -2.142px 1.289px 0px,
+    rgb(0, 0, 0) -2.356px 0.837px 0px,
+    rgb(0, 0, 0) -2.475px 0.353px 0px,
+    rgb(0, 0, 0) -2.496px -0.146px 0px,
+    rgb(0, 0, 0) -2.417px -0.639px 0px,
+    rgb(0, 0, 0) -2.242px -1.106px 0px,
+    rgb(0, 0, 0) -1.977px -1.53px 0px,
+    rgb(0, 0, 0) -1.634px -1.892px 0px,
+    rgb(0, 0, 0) -1.226px -2.179px 0px,
+    rgb(0, 0, 0) -0.768px -2.379px 0px,
+    rgb(0, 0, 0) -0.28px -2.484px 0px,
+    rgb(0, 0, 0) 0.219px -2.49px 0px,
+    rgb(0, 0, 0) 0.709px -2.397px 0px,
+    rgb(0, 0, 0) 1.171px -2.209px 0px,
+    rgb(0, 0, 0) 1.587px -1.932px 0px,
+    rgb(0, 0, 0) 1.939px -1.578px 0px,
+    rgb(0, 0, 0) 2.214px -1.162px 0px,
+    rgb(0, 0, 0) 2.4px -0.699px 0px,
+    rgb(0, 0, 0) 2.491px -0.208px 0px;
+}
+
 body {
   --baseFontSize: 60px;
   --baseHeight: calc(var(--baseFontSize) * 114 / 120);
-  text-shadow: rgb(0, 0, 0) 5px 0px 0px, rgb(0, 0, 0) 4.90033px 0.993347px 0px, rgb(0, 0, 0) 4.60531px 1.94709px 0px, rgb(0, 0, 0) 4.12668px 2.82321px 0px, rgb(0, 0, 0) 3.48353px 3.58678px 0px, rgb(0, 0, 0) 2.70151px 4.20736px 0px, rgb(0, 0, 0) 1.81179px 4.6602px 0px, rgb(0, 0, 0) 0.849836px 4.92725px 0px, rgb(0, 0, 0) -0.145998px 4.99787px 0px, rgb(0, 0, 0) -1.13601px 4.86924px 0px, rgb(0, 0, 0) -2.08073px 4.54649px 0px, rgb(0, 0, 0) -2.94251px 4.04248px 0px, rgb(0, 0, 0) -3.68697px 3.37732px 0px, rgb(0, 0, 0) -4.28444px 2.57751px 0px, rgb(0, 0, 0) -4.71111px 1.67494px 0px, rgb(0, 0, 0) -4.94996px 0.7056px 0px, rgb(0, 0, 0) -4.99147px -0.291871px 0px, rgb(0, 0, 0) -4.83399px -1.27771px 0px, rgb(0, 0, 0) -4.48379px -2.2126px 0px, rgb(0, 0, 0) -3.95484px -3.05929px 0px, rgb(0, 0, 0) -3.26822px -3.78401px 0px, rgb(0, 0, 0) -2.4513px -4.35788px 0px, rgb(0, 0, 0) -1.53666px -4.75801px 0px, rgb(0, 0, 0) -0.560763px -4.96846px 0px, rgb(0, 0, 0) 0.437495px -4.98082px 0px, rgb(0, 0, 0) 1.41831px -4.79462px 0px, rgb(0, 0, 0) 2.34258px -4.41727px 0px, rgb(0, 0, 0) 3.17346px -3.86382px 0px, rgb(0, 0, 0) 3.87783px -3.15633px 0px, rgb(0, 0, 0) 4.4276px -2.32301px 0px, rgb(0, 0, 0) 4.80085px -1.39708px 0px, rgb(0, 0, 0) 4.98271px -0.415447px 0px;
+  text-shadow: var(--text-shadow-small);
 }
 
 .fullscreen {
@@ -21,7 +125,7 @@ body {
 }
 
 .image-shadow {
-  filter: 
+  filter:
     drop-shadow(0px 0px 1px black)
     drop-shadow(0px 0px 1px black)
     drop-shadow(0px 0px 1px black)
@@ -75,12 +179,14 @@ body {
   justify-content: center;
   font-size: calc(var(--baseFontSize) * 2);
   height: calc(var(--baseHeight) * 2);
+  text-shadow: var(--text-shadow-large);
 }
 
 .team, .vs {
   font-size: var(--baseFontSize);
   height: calc(var(--baseHeight));
   font-family: 'Mohave';
+  text-shadow: var(--text-shadow-medium);
 }
 
 .team {
@@ -93,16 +199,16 @@ body {
   align-items: end;
 }
 
-.team[team="Team Aya"] {
-  color: #FD68B1;
+.team[team="Fossil"] {
+  color: #A3B3BD;
 }
 
-.team[team="Team Hatate"] {
-  color: #69FF68;
+.team[team="Mirage"] {
+  color: #CDD7DE;
 }
 
-.team[team="Team Momiji"] {
-  color: #6AFFFF;
+.team[team="Truth"] {
+  color: #B19C91;
 }
 
 .vs {
@@ -129,6 +235,7 @@ body {
   font-size: calc(var(--baseFontSize) * 2.8);
   text-align: center;
   margin-top: calc(-0.3 * var(--baseFontSize));
+  text-shadow: var(--text-shadow-large);
 }
 
 #time-nextmatch {

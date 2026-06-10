@@ -1,3 +1,4 @@
+import { english } from './english'
 import { I18N, albumArtist, categoryNames, formatScore, getPlayerName, results, westernDateTimeDisplay } from './i18n-util'
 
 export const spanish: I18N = {
@@ -10,7 +11,7 @@ export const spanish: I18N = {
   },
   results: results('Run aún no completada', ','),
   artwork: (a) => `ARTWORK HECHO POR ${a}`,
-  teamName: (t) => t,
+  teamName: english.teamName,
   playerName: (p) => getPlayerName(p),
   gameName: (g) => g.englishName,
   categoryName: categoryNames('Lunatic No Bomb', 'Lunatic Puntaje', 'Extra Puntaje', 'Clasificatoria'),

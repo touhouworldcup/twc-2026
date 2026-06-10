@@ -1,3 +1,4 @@
+import { english } from './english'
 import { I18N, albumArtist, categoryNames, easternDateTimeDisplay, formatScore, getPlayerName, results } from './i18n-util'
 
 export const chinese: I18N = {
@@ -10,8 +11,8 @@ export const chinese: I18N = {
   },
   results: results('暂无成绩', ','),
   artwork: (a) => `画师: ${a}`,
-  teamName: (t) => t,
-  playerName: (p) => getPlayerName(p, 'jp', 'cn'),
+  teamName: english.teamName,
+  playerName: (p) => getPlayerName(p, 'cn'),
   gameName: (g) => g.japaneseName,
   categoryName: categoryNames('Lunatic 避弹', 'Lunatic打分', 'Extra打分', '预选'),
   localTime: (date) => easternDateTimeDisplay('Asia/Shanghai', date),

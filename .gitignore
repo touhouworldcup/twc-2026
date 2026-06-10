@@ -7,3 +7,4 @@ node_modules
 *.tsbuildinfo
 /src/graphics/fonts/KOT.woff
 *-generated-client.ts
+deploy-config.js

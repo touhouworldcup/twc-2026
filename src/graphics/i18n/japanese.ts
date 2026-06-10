@@ -7,7 +7,7 @@ export const japanese: I18N = {
   playerTargetText: english.playerTargetText,
   results: results('未完走', ','),
   artwork: (a) => `アーティスト: ${a}`,
-  teamName: (t) => t,
+  teamName: english.teamName,
   playerName: english.playerName,
   gameName: (g) => g.japaneseName,
   categoryName: english.categoryName,

@@ -92,7 +92,7 @@ function createTeam (player: string, index: number, players: Player[]): RunDataT
 
   return [{
     id: 'team_' + id(dbPlayer.Name),
-    // name: ['Team Aya', 'Team Hatate', 'Team Momiji'][index]
+    name: ['Fossil', 'Mirage', 'Truth'][index],
     players: [createPlayer(dbPlayer)]
   }]
 }

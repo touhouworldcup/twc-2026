@@ -7,7 +7,7 @@
 import { setupAudio } from './audio'
 import { setupNowPlaying } from './nowPlaying'
 import { setupVoiceDisplayCrop } from './vc-crop'
-import { region } from 'src/shared/common'
+import { region } from '../../../shared/common'
 
 export async function initRegionalController (): Promise<void> {
   if (region === 'cn') return // no automation yet for CN

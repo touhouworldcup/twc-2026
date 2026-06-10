@@ -2,6 +2,7 @@
   "name": "twc-2026",
   "version": "0.0.0",
   "description": "TWC 2026 NodeCG bundle",
+  "type": "module",
   "homepage": "",
   "license": "CUSTOM",
   "copyright.owner": "Paul Schwandes / 32th System",
@@ -58,16 +59,9 @@
     "clean": "trash graphics dashboard extension shared .parcel-cache",
     "generate-clients:beefweb": "npx swagger-typescript-api generate -p https://raw.githubusercontent.com/hyperblast/beefweb/master/docs/player-api.yml -o ./src/graphics/obs-controller/beefweb -n beefweb-generated-client.ts",
     "generate-clients": "npm-run-all --parallel generate-clients:*",
-    "build:graphics": "parcel build --no-content-hash --target graphics",
-    "build:dashboard": "parcel build --no-content-hash --target dashboard",
-    "build:extension": "parcel build --no-content-hash --target extension",
-    "build": "npm run clean && npm-run-all --parallel build:*",
+    "build": "npm run clean && parcel build --no-content-hash",
     "commit": "git add . && git commit -m \"auto commit\" && git push -u origin2 main",
-    "deploy:graphics": "npm run build:graphics && npm exec cpx2 \"graphics/**/*\" \"//touhouworldcup.com/twc/nodecgs/bundles/twc-2026/graphics\" --clean --update",
-    "deploy:dashboard": "npm run build:dashboard && npm exec cpx2 \"dashboard/**/*\" \"//touhouworldcup.com/twc/nodecgs/bundles/twc-2026/dashboard\" --clean --update",
-    "deploy:extension": "npm run build:extension && npm exec cpx2 \"extension/**/*\" \"//touhouworldcup.com/twc/nodecgs/bundles/twc-2026/extension\" --clean --update",
-    "deploy:other": "npm exec cpx2 \"package.json\" \"//touhouworldcup.com/twc/nodecgs/bundles/twc-2026\" --update && npm exec cpx2 \"schemas/**/*\" \"//touhouworldcup.com/twc/nodecgs/bundles/twc-2026/schemas\" --update",
-    "deploy": "npm run clean && npm-run-all --parallel deploy:*"
+    "deploy": "node deploy.js"
   },
   "nodecg": {
     "compatibleRange": "^2.0.0",
@@ -141,6 +135,7 @@
     "nodecg-speedcontrol": "github:speedcontrol/nodecg-speedcontrol",
     "npm-run-all": "^4.1.5",
     "parcel": "^2.16.4",
+    "ssh2-sftp-client": "^12.1.1",
     "trash-cli": "^7.2.0",
     "ts-standard": "^12.0.2"
   },

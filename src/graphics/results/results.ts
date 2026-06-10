@@ -43,7 +43,7 @@ onLoad(textControlReplicant, match, artworkAssets, async () => {
   if (!hasArt) return
   const credit = run.customData.artworkCredit
   if (credit !== undefined) {
-    setText('#credit', `Artwork by ${credit}`, {
+    setText('#credit', i18n.artwork(credit), {
       alignHoriz: true,
       alignVert: true,
       maxFontSize: 60
