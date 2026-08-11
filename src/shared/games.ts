@@ -12,10 +12,11 @@ export interface Game {
   shortName: string
   japaneseName: string
   englishName: string
+  finalRunText: string
 }
 
-function game (numberName: string, color: string, shortName: string, japaneseName: string, englishName: string): Game {
-  return { numberName, color, shortName, japaneseName, englishName }
+function game (numberName: string, color: string, shortName: string, japaneseName: string, englishName: string, finalRunText: string = 'FINAL RUN!'): Game {
+  return { numberName, color, shortName, japaneseName, englishName, finalRunText }
 }
 
 export const games = [
