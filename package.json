@@ -2,7 +2,6 @@
   "name": "twc-2026",
   "version": "0.0.0",
   "description": "TWC 2026 NodeCG bundle",
-  "type": "module",
   "homepage": "",
   "license": "CUSTOM",
   "copyright.owner": "Paul Schwandes / 32th System",
