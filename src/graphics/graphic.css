@@ -16,11 +16,6 @@
   src: url('fonts/mohave.bold.woff') format('woff');
 }
 
-@font-face {
-  font-family: 'KOT';
-  src: url('fonts/KOT.woff') format('woff');
-}
-
 body {
   margin: 0 auto;
   font-family: 'Mohave Bold';
