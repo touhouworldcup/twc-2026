@@ -152,6 +152,7 @@ function updateTimer (): void {
   if (remainingMs < 0) {
     resetTimeText.innerText = ''
     remainingTime.style.display = 'none'
+    finalRun.innerText = getGameDataByRun(run).game.finalRunText
     finalRun.style.display = 'block'
     return
   }

@@ -12,10 +12,11 @@ export interface Game {
   shortName: string
   japaneseName: string
   englishName: string
+  finalRunText: string
 }
 
-function game (numberName: string, color: string, shortName: string, japaneseName: string, englishName: string): Game {
-  return { numberName, color, shortName, japaneseName, englishName }
+function game (numberName: string, color: string, shortName: string, japaneseName: string, englishName: string, finalRunText: string = 'FINAL RUN!'): Game {
+  return { numberName, color, shortName, japaneseName, englishName, finalRunText }
 }
 
 export const games = [
@@ -36,6 +37,7 @@ export const games = [
   game('TH18', '#26D893', 'UM', '東方虹龍洞', 'Unconnected Marketeers'),
   game('TH19', '#12B306', 'UDoALG', '東方獣王園', 'Unfinished Dream of All Living Ghost'),
   game('TH20', '#d2d2b2', 'FW', '東方錦上京', 'Fossilized Wonders'),
+  game('UB', '#706B33', 'UB', '黄昏酒場', 'Uwabami Breakers', 'LAST ORDER!'),
   game('TH00', '#4d4d4d', '?', '', '')
 ]
 
