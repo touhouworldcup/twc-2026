@@ -38,6 +38,7 @@ export const games = [
   game('TH19', '#12B306', 'UDoALG', '東方獣王園', 'Unfinished Dream of All Living Ghost'),
   game('TH20', '#d2d2b2', 'FW', '東方錦上京', 'Fossilized Wonders'),
   game('UB', '#706B33', 'UB', '黄昏酒場', 'Uwabami Breakers', 'LAST ORDER!'),
+  game('EM', '#dbd468', 'EM', '東方シリーズ', 'Touhou Series'),
   game('TH00', '#4d4d4d', '?', '', '')
 ]
 
