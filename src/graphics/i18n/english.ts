@@ -10,7 +10,7 @@ export const english: I18N = {
   },
   results: results('No run yet', ','),
   artwork: (a) => `Artwork by ${a}`,
-  teamName: (t) => `Team ${t}`,
+  teamName: (t) => t ? `Team ${t}` : '',
   playerName: (p) => getPlayerName(p),
   gameName: (g) => g.englishName,
   categoryName: categoryNames('Lunatic Survival', 'Lunatic Scoring', 'Extra Scoring', 'Qualifier'),
